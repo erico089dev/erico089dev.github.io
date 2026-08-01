@@ -1,0 +1,468 @@
+{
+  "meta": {
+    "title": "Èric Casanovas Pérez — Portfolio",
+    "description": "Portfolio personal de l'Èric Casanovas: projectes d'IA, automatització i productivitat. Generació de contingut, un assistent personal, triatge amb Claude i una web-regal."
+  },
+  "nav": {
+    "projects": "Projectes",
+    "about": "Sobre mi",
+    "contact": "Contacte"
+  },
+  "footer": {
+    "tagline": "IA · Automatització · Productivitat",
+    "repos": "La majoria dels meus repos són privats — escriu-me si vols fer-hi un cop d'ull o una demo."
+  },
+  "hero": {
+    "kicker": "Desenvolupador full-stack · Solucions d'IA",
+    "title": "Hola, sóc l'Èric.",
+    "subtitle": "En lloc d'ensenyar-te el meu GitHub i el meu codi, aquí tens un portfolio dels meus projectes personals: els que construeixo al meu temps lliure per investigar, formar-me i resoldre'm el dia a dia. Un cop d'ull al que faig quan ningú m'ho demana.",
+    "ctaProjects": "Veure projectes",
+    "ctaAbout": "Sobre mi",
+    "stack": ["Python", "TypeScript", "React", "Astro", "Docker", "Agents IA", "RAG", "LLMs", "Self-hosted"]
+  },
+  "about": {
+    "eyebrow": "Sobre mi",
+    "title": "Programari, dades i la IA com a palanca",
+    "companyLabel": "A la feina",
+    "company": [
+      "Vaig començar com a enginyer de programari fent front-end mòbil, a Android i iOS. Després vaig canviar a la meva empresa actual, on vaig arrencar amb backend en .NET i una mica de front en TypeScript. Avui, a la mateixa empresa però en un equip nou, treballo en solucions d'IA — i allà faig una mica de tot: penso l'arquitectura, programo, dono un cop de mà amb els deployments i faig de pont entre equips.",
+      "La IA em sembla una tecnologia potentíssima, sobretot en solucions on pot potenciar i raonar de manera segura i constant. No va de ficar IA a tot arreu: parteixo del problema i penso com resoldre'l — i molts dels problemes d'avui, els que demanen raonament, s'hi recolzen enormement."
+    ],
+    "personalLabel": "En allò personal",
+    "personal": "En allò personal toco de tot. He dedicat molt de temps a l'automatització de vídeo, però també a automatitzar les meves pròpies coses del dia a dia, a la infraestructura i el deployment, i a provar tecnologia nova sense parar. I de fons, sempre el mateix que em mou: les solucions d'IA.",
+    "strengthLabel": "El meu punt fort",
+    "strength": "Si alguna cosa em defineix és l'adaptabilitat. Sobre una base d'enginyer de programari i científic de dades —i amb la IA d'aliada— em moc amb soltesa fora del meu terreny: canvio de llenguatge, continuo entenent el codi i l'estructura de projectes que no són meus i acabo desenvolupant-me en entorns aliens força de pressa. Aquesta capacitat d'adaptar-me és el meu punt més fort.",
+    "cvNote": "Vols el detall formal, amb dates i empreses?",
+    "cvCta": "Descarrega el CV",
+    "cvSoonCta": "CV en preparació",
+    "cvSoonHint": "Encara no he penjat el PDF — torna aviat o escriu-me directament.",
+    "doingEyebrow": "Què fa l'Èric?",
+    "moreLabel": "El que faig més",
+    "supportLabel": "També, en suport",
+    "primary": [
+      { "id": "api", "label": "Backend & APIs", "desc": "el que més toco" },
+      { "id": "ui", "label": "Interfície", "desc": "web i mòbil" },
+      { "id": "ai", "label": "IA & automatització", "desc": "el meu terreny" },
+      { "id": "arch", "label": "Arquitectura", "desc": "la penso i la valido amb l'equip" }
+    ],
+    "support": [
+      { "id": "deploy", "label": "Deploy & infra", "desc": "tot en allò personal; a l'empresa, a nivell de repo" },
+      { "id": "solution", "label": "Pensar la solució", "desc": "el què i el com, amb negoci" }
+    ],
+    "swLabel": "Programari",
+    "aiLabel": "IA & automatització",
+    "sw": ["Python", "FastAPI", ".NET", "TypeScript", "PostgreSQL", "SQL", "Oracle", "Docker", "Kubernetes", "Jenkins"],
+    "ai": ["LLMs i models", "Models locals i petits", "MCPs", "Tools / function calling", "TTS", "Claude Code", "GitHub Copilot"]
+  },
+  "projects": {
+    "eyebrow": "Projectes",
+    "title": "Alguns dels meus projectes",
+    "note": "Gairebé tots són repos privats. Si vols veure'n algun per dins, escriu-me i et dono accés.",
+    "cta": "Veure projecte",
+    "starEyebrow": "Projecte estrella",
+    "othersEyebrow": "Altres projectes",
+    "items": [
+      {
+        "id": "acg",
+        "family": "acg",
+        "name": "ACG",
+        "full": "Automatic Content Generator",
+        "tagline": "Un pipeline que genera i publica vídeos curts (Reels/Shorts) — amb fluxos automàtics i semiautomàtics.",
+        "href": "/ca/acg",
+        "platformsLabel": "Publica a",
+        "platforms": ["instagram", "tiktok", "youtube"],
+        "stack": ["9 microserveis", "LLMs + veu clonada", "MoviePy/FFmpeg", "R2 + GH Actions"],
+        "badges": [{ "label": "en standby", "variant": "standby" }],
+        "flag": "Projecte estrella",
+        "emphasis": "El meu projecte més ambiciós: el més gran i complex, amb diferència.",
+        "stats": [
+          { "value": "9", "label": "microserveis" },
+          { "value": "3", "label": "plataformes" },
+          { "value": "24/7", "label": "sense tocar res" }
+        ]
+      },
+      {
+        "id": "duna",
+        "family": "duna",
+        "icon": "/media/duna/icon.webp",
+        "name": "Duna",
+        "full": "El meu assistent personal",
+        "tagline": "Calendari, tasques i xat en llenguatge natural en una sola app que faig servir cada dia.",
+        "href": "/ca/duna",
+        "platformsLabel": "Reuneix",
+        "platforms": ["google-calendar", "google-tasks", "telegram"],
+        "stack": ["Monorepo TS", "PWA + Web Push iOS", "SQLite", "Tailscale"],
+        "badges": [{ "label": "en ús diari", "variant": "ok" }]
+      },
+      {
+        "id": "inbox",
+        "family": "inbox",
+        "name": "triagebox",
+        "full": "Àudio → tiquet → Claude",
+        "tagline": "Converteixo un àudio en un tiquet, i el Claude el revisa i el resol per mi.",
+        "href": "/ca/triagebox",
+        "platformsLabel": "El flux",
+        "platforms": ["mic", "ticket", "claude"],
+        "stack": ["FastAPI", "faster-whisper", "Skill de Claude", "Multi-tenant"],
+        "badges": [{ "label": "públic", "variant": "accent" }]
+      },
+      {
+        "id": "cumple",
+        "family": "cumple",
+        "name": "Cumple",
+        "full": "Un regal fet amb codi",
+        "tagline": "Una web interactiva que vaig fer a la meva parella per al seu aniversari. També gaudeixo programant per a la gent que estimo.",
+        "href": "/ca/cumple",
+        "stack": ["HTML/CSS", "Interactiu", "Fet a mà"],
+        "badges": [{ "label": "personal", "variant": "accent" }, { "label": "en construcció", "variant": "standby" }]
+      }
+    ]
+  },
+  "acg": {
+    "meta": {
+      "title": "ACG — Automatic Content Generator · Èric Casanovas Pérez",
+      "description": "Pipeline de 9 microserveis que genera i publica vídeos curts de manera 100% automàtica: LLMs, clonació de veu, render de vídeo i publicació."
+    },
+    "back": "Projectes",
+    "name": "ACG",
+    "full": "Automatic Content Generator",
+    "tagline": "Un pipeline que genera i publica vídeos curts (Reels/Shorts) — amb fluxos automàtics i semiautomàtics.",
+    "badges": [
+      { "label": "en standby", "variant": "standby" }
+    ],
+    "concept": {
+      "stages": [
+        { "label": "Idea o tema", "icon": "idea" },
+        { "label": "Guió, veu i imatge", "sub": "generat amb IA", "icon": "ai" },
+        { "label": "Muntatge del vídeo", "icon": "video" },
+        { "label": "Publicació automàtica", "icon": "publish", "platforms": ["instagram", "tiktok", "youtube"] }
+      ]
+    },
+    "stats": [
+      { "value": "9", "label": "microserveis" },
+      { "value": "4", "label": "backends LLM" },
+      { "value": "5", "label": "motors de veu" },
+      { "value": "7+", "label": "formats de vídeo" }
+    ],
+    "gallery": {
+      "eyebrow": "Captures",
+      "title": "El sistema per dins",
+      "items": [
+        { "caption": "Dashboard de control del pipeline" },
+        { "caption": "ACGManager · builder de personatges" },
+        { "caption": "Un Reel generat automàticament" }
+      ]
+    },
+    "voice": {
+      "eyebrow": "Veu clonada",
+      "title": "Escolta una veu generada pel sistema",
+      "intro": "Un dels nuclis d'ACG és la síntesi de veu: vaig provar gairebé tots els motors TTS open-source rellevants i vaig muntar clonació de veu sobre uns quants. Aquestes són mostres reals del pipeline.",
+      "samples": [
+        { "label": "Narració · veu A", "meta": "VoxCPM2 · clonada · ES", "src": "/media/acg/voices/sample_voxcpm2_es.wav" },
+        { "label": "Narració · veu B", "meta": "F5-TTS · clonada · ES", "src": "/media/acg/voices/sample_f5tts_es.wav" },
+        { "label": "Narració · veu C", "meta": "Chatterbox · clonada · ES", "src": "/media/acg/voices/sample_chatterbox_es.wav" },
+        { "label": "Narració · anglès", "meta": "Chatterbox · EN", "src": "/media/acg/voices/sample_chatterbox_en.wav" },
+        { "label": "Narració · anglès", "meta": "F5-TTS · EN", "src": "/media/acg/voices/sample_f5tts_en.wav" }
+      ]
+    },
+    "problem": {
+      "eyebrow": "El problema",
+      "title": "Produir vídeo social a escala sense tocar res a mà",
+      "body": "Un canal de contingut curt consumeix idees, guió, veu, imatges, muntatge i publicació constants. Fer-ho a mà no escala. ACG converteix tot aquest flux en un pipeline que investiga, escriu, narra amb veu clonada, munta el vídeo i el publica — de principi a fi, sense intervenció."
+    },
+    "arch": {
+      "eyebrow": "Com funciona",
+      "title": "De la idea al Reel publicat",
+      "caption": "Un orquestrador central coordina les fonts, la generació amb IA, el muntatge del vídeo i la publicació. Cada peça és un servei independent.",
+      "diagramAlt": "Pipeline d'ACG: un orquestrador coordina fonts de dades, generació amb IA, edició de vídeo i publicació."
+    },
+    "flows": {
+      "eyebrow": "Els fluxos",
+      "title": "8 fluxos, cadascun un pipeline complet",
+      "intro": "El motor d'ACG és tipus plugin: cada «flux» és un pipeline definit per passos, de l'origen del contingut fins a la publicació. Afegir un format nou és escriure un flux, sense tocar l'orquestrador. Aquests són els que hi ha muntats:",
+      "stepsLabel": "passos",
+      "featured": {
+        "label": "Mira un flux per dins",
+        "flowName": "Reddit Video",
+        "note": "D'un fil calent de Reddit a un Reel publicat a Instagram, TikTok i YouTube. Es reprodueix sol.",
+        "frames": ["/media/acg/reddit-thread.webp", "/media/acg/reddit-comments.webp", "/media/acg/reddit-script.webp", "/media/acg/reddit-frame-2.webp", "/media/acg/reddit-thumb.webp"],
+        "captions": [
+          "Entra a Reddit i detecta un fil que està petant",
+          "Extreu els comentaris: dades, debat, acords i rebuigs",
+          "Refina-ho tot i ho converteix en un guió amb diàleg",
+          "Munta el vídeo: fons, personatge, subtítols i veu clonada",
+          "I es publica sol — Instagram, TikTok i YouTube"
+        ],
+        "prev": "Pas anterior",
+        "next": "Pas següent",
+        "stepWord": "Pas"
+      },
+      "showcase": {
+        "heading": "Tria un flux per veure com funciona",
+        "hint": "llisca per veure els passos →",
+        "auto": "Automàtic",
+        "semi": "Semiautomàtic",
+        "step": "pas"
+      },
+      "legend": {
+        "source": "Font",
+        "prompt": "IA / prompt",
+        "process": "Procés",
+        "service": "Render",
+        "publish": "Publicar"
+      }
+    },
+    "services": {
+      "eyebrow": "Per dins",
+      "title": "Els 9 microserveis",
+      "items": [
+        { "name": "ACGAutomation", "role": "Orquestrador. Fluxos tipus plugin + DAG en YAML, health-gating de dependències.", "port": "orquestrador", "stack": ["Python", "YAML DAG", "plugins"] },
+        { "name": "ACGAIAPI", "role": "Router de 4 backends LLM + 5 motors TTS amb clonació de veu + captioning amb visió.", "port": "IA", "stack": ["LLM router", "TTS", "vision"] },
+        { "name": "ACGVideoEditorAPI", "role": "Render de vídeo: subtítols karaoke, miniatures, converses multi-personatge.", "port": "render", "stack": ["MoviePy", "FFmpeg", "Whisper"] },
+        { "name": "ACGClipForge", "role": "Indexador semàntic de clips per reutilitzar material.", "port": "index", "stack": ["CLIP", "BLIP-2", "ChromaDB"] },
+        { "name": "ACGYotubeAPI", "role": "Ingesta de fonts de YouTube.", "port": "ingesta", "stack": ["yt-dlp", "Python"] },
+        { "name": "ACGKnowledgeGatherer", "role": "Research de temes (Reddit i altres fonts).", "port": "research", "stack": ["Reddit API", "scraping"] },
+        { "name": "ACGIGScheduler", "role": "Publicador serverless: puja i programa les publicacions.", "port": "publish", "stack": ["R2", "GH Actions", "IG Graph API"] },
+        { "name": "ACGManager", "role": "Panell human-in-the-loop: builder de personatges i control.", "port": "panell", "stack": ["human-in-loop", "builder"] },
+        { "name": "ACGDashboard", "role": "Interfície de control i mètriques del pipeline.", "port": "UI", "stack": ["React 19", "Vite"] }
+      ]
+    },
+    "highlights": {
+      "eyebrow": "El que més m'agrada",
+      "title": "Per què vaig gaudir d'aquest projecte",
+      "items": [
+        { "title": "Microserveis de veritat", "note": "Graf de dependències declaratiu amb health-gating: cada servei espera que les seves dependències estiguin sanes abans d'arrencar el seu flux." },
+        { "title": "Motor de flows tipus plugin", "note": "7+ formats de vídeo diferents definits com a fluxos en YAML, sense tocar l'orquestrador." },
+        { "title": "Amplitud d'IA", "note": "4 backends LLM (cloud + local), 5 motors TTS amb clonació de veu, SD/ComfyUI per a imatge, CLIP/BLIP-2 i cerca semàntica." },
+        { "title": "Hacks de cost", "note": "GitHub Actions com a cron gratuït i Cloudflare R2 com a S3 sense factura. Self-hosted de dalt a baix." }
+      ]
+    },
+    "honesty": {
+      "eyebrow": "Honestedat",
+      "title": "On és avui",
+      "body": "ACG és un projecte personal, self-hosted i funcional, però ara mateix en standby: el vaig construir per aprendre a orquestrar microserveis d'IA de punta a punta, i va complir l'objectiu. El codi és privat; escriu-me si vols una demo."
+    },
+    "nav": {
+      "back": "← Projectes",
+      "next": "Següent: Duna →"
+    }
+  },
+  "duna": {
+    "meta": {
+      "title": "Duna — El meu assistent personal · Èric Casanovas Pérez",
+      "description": "El meu assistent personal self-hosted: Google Calendar + Google Tasks + xat en llenguatge natural, en una sola app, des de 3 clients."
+    },
+    "back": "Projectes",
+    "name": "Duna",
+    "iconAlt": "Icona de l'app Duna",
+    "full": "El meu assistent personal",
+    "tagline": "Calendari, tasques i xat en llenguatge natural en una sola app que faig servir cada dia.",
+    "heroLine": "Li parlo i ella organitza el meu dia: calendari i tasques, de veritat unides.",
+    "badges": [
+      { "label": "en ús diari", "variant": "ok" }
+    ],
+    "concept": {
+      "stages": [
+        { "label": "Li parles", "sub": "veu o text, des del mòbil", "icon": "chat" },
+        { "label": "Duna organitza i sincronitza", "sub": "crea esdeveniments i tasques per tu", "icon": "calendar", "platforms": ["google-calendar", "google-tasks"] },
+        { "label": "Comparteixes i coordines", "sub": "calendari compartit amb qui vulguis", "icon": "share" }
+      ]
+    },
+    "stats": [
+      { "value": "3", "label": "clients" },
+      { "value": "2", "label": "integracions Google" },
+      { "value": "1", "label": "motor de xat" },
+      { "value": "0", "label": "ports exposats" }
+    ],
+    "problem": {
+      "eyebrow": "El problema",
+      "title": "Per què em vaig fer el meu propi assistent",
+      "intro": "Abans de Duna vaig provar un bon grapat d'apps per organitzar-me. Cap ho resolia tot.",
+      "hook": "Necessitava una cosa que cap app no em donava sencera —i a sobre, gratis.",
+      "needs": [
+        "Apuntar ràpid, també per veu",
+        "Sense omplir formularis",
+        "Afegir ubicació sense embolics",
+        "Recordatoris simples",
+        "Bonica i agradable de fer servir",
+        "Calendari compartit amb la meva parella: veure la seva disponibilitat i organitzar plans"
+      ],
+      "shot": {
+        "caption": "Apuntar per veu, en segons",
+        "src": "/media/duna/chat-claro.webp",
+        "alt": "Duna en mode clar, pantalla de xat buida a punt per escriure o parlar"
+      },
+      "gallery": [
+        { "caption": "Vista de llista, tot el que toca", "src": "/media/duna/calendario-lista.webp", "alt": "Vista de llista de Duna amb els propers esdeveniments i tasques" },
+        { "caption": "Vista de mes, d'un cop d'ull", "src": "/media/duna/calendario-mes-detalle.webp", "alt": "Vista de mes de Duna amb el detall d'un dia seleccionat" },
+        { "caption": "I en mode fosc, per a la nit", "src": "/media/duna/chat-oscuro.webp", "alt": "Duna en mode fosc, pantalla de xat" }
+      ],
+      "disconnected": {
+        "caption": "Abans de Duna: cada cosa a la seva app, sense parlar-se entre elles. Apuntar alguna cosa era obrir dues apps i repetir-ho dues vegades.",
+        "calendarLabel": "Google Calendar",
+        "tasksLabel": "Google Tasks"
+      },
+      "solution": "Així ho resol Duna"
+    },
+    "arch": {
+      "eyebrow": "Com funciona",
+      "title": "Tres maneres de parlar-li, una sola font de veritat",
+      "caption": "Li parlo des del navegador, el mòbil o Telegram. Un motor de xat central entén el que dic i ho porta a Google (calendari i tasques), guardant en local el que Google no guarda. Tot a la meva xarxa privada, sense exposar res a internet.",
+      "diagramAlt": "Arquitectura de Duna: tres clients parlen amb un motor de xat central que sincronitza amb Google i guarda extres a SQLite, sobre Tailscale."
+    },
+    "features": {
+      "title": "Què la fa especial",
+      "items": [
+        { "title": "Privada de debò", "note": "Viu a la meva xarxa privada; res no s'exposa a internet i les dades són només meves.", "icon": "lock", "wide": true },
+        { "title": "Al teu mòbil com una app, amb avisos", "note": "S'instal·la al mòbil i t'avisa quan toca, fins i tot a l'iPhone.", "icon": "bell" },
+        { "title": "Cada matí, el teu dia en un missatge", "note": "Un resum amb el que toca aquell dia, sense obrir res.", "icon": "sun" },
+        { "title": "Dius una hora, crea un esdeveniment", "note": "I si no dius hora, ho desa com a tasca. Un detall que canvia l'ús diari.", "icon": "clock" }
+      ],
+      "inside": {
+        "label": "Feta amb cura per dins",
+        "note": "Monorepo TypeScript, injecció de dependències, tests sense xarxa, CSS a mà i tot sobre Tailscale."
+      }
+    },
+    "honesty": {
+      "eyebrow": "En ús",
+      "title": "La meva app de cada dia",
+      "body": "La faig servir cada dia per no dependre de la memòria: apunto tasques tan bon punt se m'acuden, guardo plans de futur, cites mèdiques, la ITV del cotxe… qualsevol cosa amb data que no em puc permetre oblidar. Li parlo per veu mentre faig una altra cosa i ella ho col·loca al seu lloc, calendari o tasca. No és una demo: és privada, self-hosted sobre Tailscale i sense res exposat a internet. Si vols veure-la en marxa, escriu-me.",
+      "shot": {
+        "caption": "Sense tasques pendents, tot al dia",
+        "src": "/media/duna/tareas.webp",
+        "alt": "Vista de tasques de Duna en mode clar, sense res pendent"
+      }
+    },
+    "nav": {
+      "back": "← ACG",
+      "next": "Següent: triagebox →"
+    }
+  },
+  "inbox": {
+    "meta": {
+      "title": "triagebox — Àudio a tiquet, resolt pel Claude · Èric Casanovas Pérez",
+      "description": "Un microservei que converteix un àudio en un tiquet, i una skill del Claude que el revisa i actua. Genèric, multi-tenant i reutilitzable. Open-source i públic."
+    },
+    "back": "Projectes",
+    "name": "triagebox",
+    "full": "Àudio → tiquet → Claude",
+    "tagline": "Converteixo un àudio en un tiquet, i el Claude el revisa i el resol per mi.",
+    "badges": [
+      { "label": "públic", "variant": "gold" }
+    ],
+    "concept": {
+      "stages": [
+        { "label": "Graves un àudio", "sub": "des d'on sigui", "icon": "mic" },
+        { "label": "Es crea un tiquet", "sub": "transcrit en local", "icon": "ticket" },
+        { "label": "El Claude el resol", "sub": "el revisa i actua", "icon": "ai" }
+      ]
+    },
+    "stats": [
+      { "value": "3", "label": "maneres de gravar" },
+      { "value": "1", "label": "tiquet per àudio" },
+      { "value": "1", "label": "skill de Claude" },
+      { "value": "públic", "label": "open-source", "tone": "secondary" }
+    ],
+    "story": {
+      "eyebrow": "Com funciona",
+      "title": "D'un bug al mòbil a una cosa resolta a casa",
+      "caption": "Trobo un error mentre faig servir una app, el dicto al moment i me n'oblido. A casa, el Claude ja té el tiquet i el va resolent — sense que jo obri cap editor ni escrigui res.",
+      "panels": [
+        { "title": "Faig servir la meva app i veig un bug", "sub": "L'estic provant i alguna cosa falla." },
+        { "title": "El dicto en un àudio", "sub": "Sense obrir res: explico l'error parlant." },
+        { "title": "Es desa com a tiquet", "sub": "L'àudio puja al núvol (triagebox) fet tiquet." },
+        { "title": "El Claude el resol a casa", "sub": "A la pròxima sessió els recupera i actua un a un." }
+      ]
+    },
+    "example": {
+      "eyebrow": "Un exemple real",
+      "title": "Un àudio en lloc d'un oblit",
+      "body": "Estic provant una app al mòbil i <strong>veig un bug</strong>. En lloc de perdre'l, <strong>el dicto</strong>: «a la pantalla de login, el botó de Google no fa res». En arribar a casa, <strong>el Claude Code ja té el tiquet</strong>, entén el problema, mira el codi i <strong>sovint el deixa arreglat</strong>. El mateix serveix perquè un company reporti una errada amb només un àudio."
+    },
+    "design": {
+      "eyebrow": "Per dins",
+      "title": "Un patró, no un producte tancat",
+      "items": [
+        { "title": "Genèric i multi-tenant", "note": "Diverses apps comparteixen el mateix triagebox via apps.yml; cadascuna amb el seu espai." },
+        { "title": "Tokens amb scope", "note": "Permisos capture / read / write separats: qui grava no pot llegir ni actuar." },
+        { "title": "Xarxa privada", "note": "Corre a la xarxa privada (Tailscale); res exposat a internet." },
+        { "title": "Transcripció local", "note": "faster-whisper en local: l'àudio no surt de casa." }
+      ]
+    },
+    "skill": {
+      "eyebrow": "La skill /tickets",
+      "title": "Empaquetada per copiar a qualsevol repo",
+      "body": "Aquesta lògica viu com una skill del Claude Code (/tickets) que pots copiar a qualsevol projecte: llegeix els tiquets per API, els classifica i decideix què fer — amb una nota de seguretat explícita contra prompt-injection, perquè el contingut ve d'àudios de tercers."
+    },
+    "honesty": {
+      "eyebrow": "Open-source",
+      "title": "El meu primer projecte públic",
+      "body": "triagebox és el meu primer repo open-source: públic i pensat perquè qualsevol el munti al seu stack. El codi és a GitHub, a punt per copiar la skill i el microservei al teu projecte.",
+      "cta": "Veure el repo a GitHub"
+    },
+    "nav": {
+      "back": "← Duna",
+      "next": "Següent: Cumple →"
+    }
+  },
+  "cumple": {
+    "meta": {
+      "title": "Cumple — Un regal fet amb codi · Èric Casanovas Pérez",
+      "description": "Una web interactiva feta a mà com a regal d'aniversari per a la meva parella: escenes, so i confeti. Codi amb estima."
+    },
+    "back": "Projectes",
+    "name": "Cumple",
+    "full": "Un regal fet amb codi",
+    "tagline": "Una web interactiva que vaig fer a la meva parella per al seu aniversari.",
+    "badges": [
+      { "label": "personal", "variant": "family" },
+      { "label": "en construcció", "variant": "standby" }
+    ],
+    "wip": {
+      "title": "Pàgina en construcció",
+      "body": "Encara em falten les captures reals d'aquesta web-regal. L'estructura i el text ja hi són, però les imatges d'aquí sota són de mostra per ara."
+    },
+    "concept": {
+      "stages": [
+        { "label": "Una idea amb estima", "icon": "idea" },
+        { "label": "Web feta a mà", "sub": "HTML, CSS i JS", "icon": "code" },
+        { "label": "Escenes, so i confeti", "icon": "sparkles" },
+        { "label": "Un regal per a ella", "icon": "heart" }
+      ]
+    },
+    "stats": [],
+    "story": {
+      "eyebrow": "La idea",
+      "title": "També programo per a la gent que estimo",
+      "body": "No tot és infraestructura i microserveis. Algunes de les coses que més m'ha agradat fer són per a la gent que estimo. Aquesta és una web interactiva que vaig fer a la meva parella per al seu aniversari: s'obre com una petita experiència, amb escenes que passes una a una, so i confeti. HTML, CSS i JavaScript a mà, sense frameworks — només ganes de sorprendre-la."
+    },
+    "gallery": {
+      "eyebrow": "Captures",
+      "title": "Com es veu",
+      "items": [
+        { "caption": "La portada de l'experiència" },
+        { "caption": "Una de les escenes interactives" },
+        { "caption": "El final, amb confeti" }
+      ]
+    },
+    "highlights": {
+      "eyebrow": "Detalls",
+      "title": "El que hi vaig posar dins",
+      "items": [
+        { "title": "Escenes interactives", "note": "La web avança per escenes que la persona va descobrint una a una, al seu ritme." },
+        { "title": "Tipografia amb caràcter", "note": "Fraunces + Inter per donar-li un aire càlid i cuidat, lluny del genèric." },
+        { "title": "So i confeti", "note": "Petits detalls d'animació i àudio que fan que el moment se senti especial." },
+        { "title": "HTML pur", "note": "Fet a mà, sense frameworks: lleuger, ràpid i fàcil d'allotjar a qualsevol lloc." }
+      ]
+    },
+    "honesty": {
+      "eyebrow": "Personal",
+      "title": "Codi amb estima",
+      "body": "És un projecte petit i personal, però dels que més il·lusió em fa ensenyar: demostra que m'agrada cuidar el disseny i el detall, i que programar també em serveix per fer feliç la gent que estimo."
+    },
+    "nav": {
+      "back": "← triagebox",
+      "next": "Tots els projectes →"
+    }
+  }
+}

@@ -1,0 +1,97 @@
+---
+import { locales, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+// Idiomas publicados.
+const available: Locale[] = ['es', 'en', 'ca'];
+const labels: Record<Locale, string> = { es: 'ES', en: 'EN', ca: 'CA' };
+
+// Ruta sin el prefijo de idioma, para reconstruirla en otro idioma.
+const path = Astro.url.pathname.replace(/^\/(es|en|ca)(?=\/|$)/, '');
+---
+
+<div class="langs" role="group" aria-label="Idioma">
+  {
+    locales.map((l) => {
+      const isActive = l === locale;
+      if (available.includes(l)) {
+        return (
+          <a
+            href={`/${l}${path || '/'}`}
+            class:list={['lang', { 'is-active': isActive }]}
+            aria-current={isActive ? 'true' : undefined}
+            data-lang-link
+          >
+            {labels[l]}
+          </a>
+        );
+      }
+      return (
+        <span class="lang is-disabled" aria-disabled="true" title="Próximamente">
+          {labels[l]}
+        </span>
+      );
+    })
+  }
+</div>
+
+<script is:inline>
+  // Al cambiar de idioma, añade el ancla de la sección visible a la URL destino
+  // (p. ej. /en/#sobre-mi) para que la nueva página cargue en esa misma sección en
+  // lugar de saltar al top. El navegador hace el scroll de forma nativa.
+  (function () {
+    var links = document.querySelectorAll('a[data-lang-link]');
+    if (!links.length) return;
+    var ids = ['proyectos', 'sobre-mi', 'contacto'];
+    function currentSection() {
+      var y = window.scrollY || window.pageYOffset || 0;
+      var id = '';
+      for (var i = 0; i < ids.length; i++) {
+        var el = document.getElementById(ids[i]);
+        if (el && el.offsetTop <= y + 80) { id = ids[i]; }
+      }
+      return id;
+    }
+    links.forEach(function (a) {
+      a.addEventListener('click', function () {
+        var base = (a.getAttribute('href') || '').split('#')[0];
+        var id = currentSection();
+        a.setAttribute('href', id ? base + '#' + id : base);
+      });
+    });
+  })();
+</script>
+
+<style>
+  .langs {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+  .lang {
+    padding: 0.25rem 0.4rem;
+    border-radius: var(--r-sm);
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+  }
+  a.lang:hover {
+    color: var(--accent);
+    background: var(--surface-2);
+  }
+  .lang.is-active {
+    color: var(--accent-ink);
+    background: var(--accent);
+  }
+  .lang.is-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+</style>

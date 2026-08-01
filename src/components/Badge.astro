@@ -1,0 +1,47 @@
+---
+interface Props {
+  variant?: 'ok' | 'standby' | 'private' | 'accent' | 'family' | 'gold';
+  dot?: boolean;
+}
+
+const { variant = 'accent', dot = true } = Astro.props;
+---
+
+<span class:list={['badge', `badge--${variant}`]}>
+  {dot && <span class="badge__dot" aria-hidden="true"></span>}
+  <slot />
+</span>
+
+<style>
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.2rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    line-height: 1.4;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--border-strong);
+    color: var(--text-muted);
+    background: var(--surface);
+    white-space: nowrap;
+  }
+  .badge__dot {
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .badge--ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, transparent); }
+  .badge--standby { color: var(--standby); border-color: color-mix(in srgb, var(--standby) 45%, transparent); }
+  .badge--private { color: var(--text-muted); }
+  .badge--accent { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+  .badge--family { color: var(--family); border-color: color-mix(in srgb, var(--family) 45%, transparent); }
+  .badge--gold {
+    color: var(--accent-2-ink);
+    background: var(--accent-2);
+    border-color: color-mix(in srgb, var(--accent-2) 60%, var(--text));
+  }
+  .badge--gold .badge__dot { background: var(--accent-2-ink); }
+</style>

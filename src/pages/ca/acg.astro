@@ -1,0 +1,282 @@
+---
+import Base from '../../layouts/Base.astro';
+import Section from '../../components/Section.astro';
+import ProjectHero from '../../components/ProjectHero.astro';
+import ConceptFlow from '../../components/ConceptFlow.astro';
+import AcgFlowField from '../../components/AcgFlowField.astro';
+import FlowReel from '../../components/FlowReel.astro';
+import FlowCoverflow from '../../components/FlowCoverflow.astro';
+import Diagram from '../../components/Diagram.astro';
+import AcgDiagram from '../../components/diagrams/AcgDiagram.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import AudioSample from '../../components/AudioSample.astro';
+import StatRow from '../../components/StatRow.astro';
+import FlowShowcase from '../../components/FlowShowcase.astro';
+import { acgFlows } from '../../data/acgFlows';
+import type { StepType } from '../../data/acgFlows';
+import { getLocaleFromUrl, useTranslations, useRawTranslations } from '../../i18n/utils';
+
+type Variant = 'ok' | 'standby' | 'private' | 'accent' | 'family';
+interface BadgeItem { label: string; variant?: Variant }
+interface Stat { value: string; label: string }
+interface Service { name: string; role: string; port?: string; stack: string[] }
+interface Highlight { title: string; note: string }
+interface Sample { label: string; meta: string; src?: string }
+interface Shot { caption: string; src?: string }
+interface Stage { label: string; sub?: string; icon?: string; platforms?: string[] }
+interface Featured { label: string; flowName: string; note: string; frames: (string | null)[]; captions: string[]; prev: string; next: string; stepWord: string }
+
+// Fondo del hero de ACG. Opciones: 'platforms-brand' | 'platforms' | 'streams'
+// ('platforms-brand' añade el toque de color de marca de YouTube/Instagram/TikTok).
+const HERO_MOTIF = 'platforms-brand';
+
+const locale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(locale);
+const tRaw = useRawTranslations(locale);
+
+const badges = tRaw<BadgeItem[]>('acg.badges', []);
+const stats = tRaw<Stat[]>('acg.stats', []);
+const services = tRaw<Service[]>('acg.services.items', []);
+const highlights = tRaw<Highlight[]>('acg.highlights.items', []);
+const samples = tRaw<Sample[]>('acg.voice.samples', []);
+const concept = tRaw<Stage[]>('acg.concept.stages', []);
+const featured = tRaw<Featured>('acg.flows.featured', { label: '', flowName: 'Reddit Video', note: '', frames: [], captions: [], prev: 'Anterior', next: 'Siguiente', stepWord: 'Paso' });
+const flowsLegend = tRaw<Record<StepType, string>>('acg.flows.legend', {
+  source: 'Fuente', prompt: 'IA / prompt', process: 'Proceso', service: 'Render', publish: 'Publicar',
+});
+const showcase = tRaw<{ hint: string; auto: string; semi: string; step: string }>('acg.flows.showcase', {
+  hint: 'desliza →', auto: 'Automático', semi: 'Semiautomático', step: 'paso',
+});
+---
+
+<Base title={t('acg.meta.title')} description={t('acg.meta.description')} family="acg">
+  <ProjectHero
+    name={t('acg.name')}
+    full={t('acg.full')}
+    tagline={t('acg.tagline')}
+    badges={badges}
+    backLabel={t('acg.back')}
+    backHref={`/${locale}/#proyectos`}
+  >
+    <AcgFlowField slot="bg" motif={HERO_MOTIF} />
+    <ConceptFlow slot="visual" stages={concept} />
+  </ProjectHero>
+
+  <Section flush band="surface" eyebrow={t('acg.flows.eyebrow')} title={t('acg.flows.title')}>
+    <p class="prose" data-reveal>{t('acg.flows.intro')}</p>
+    <div class="featured" data-reveal>
+      <div class="featured__head">
+        <span class="featured__label mono">{featured.label}</span>
+        <span class="featured__flow">
+          <span class="featured__flow-name">{featured.flowName}</span>
+          <span class="featured__flow-badge mono">Automático</span>
+        </span>
+      </div>
+      <p class="featured__note">{featured.note}</p>
+    </div>
+    <div class="featured__bleed" data-reveal>
+      <FlowCoverflow
+        flowName={featured.flowName}
+        frames={featured.frames}
+        captions={featured.captions}
+        labels={{ prev: featured.prev, next: featured.next, stepWord: featured.stepWord }}
+      />
+    </div>
+    <FlowShowcase flows={acgFlows} legend={flowsLegend} stepsLabel={t('acg.flows.stepsLabel')} labels={showcase} />
+  </Section>
+
+  <Section flush class="acg-band-tint" eyebrow={t('acg.voice.eyebrow')} title={t('acg.voice.title')}>
+    <p class="prose" data-reveal>{t('acg.voice.intro')}</p>
+    <div class="samples">
+      {samples.map((s) => <AudioSample label={s.label} meta={s.meta} src={s.src} />)}
+    </div>
+  </Section>
+
+  <Section flush band="surface" eyebrow={t('acg.arch.eyebrow')} title={t('acg.arch.title')}>
+    <div data-reveal>
+      <Diagram
+        title="Pipeline ACG"
+        caption={t('acg.arch.caption')}
+        ariaLabel={t('acg.arch.diagramAlt')}
+      >
+        <AcgDiagram />
+      </Diagram>
+    </div>
+  </Section>
+
+  <Section flush class="acg-band-tint" eyebrow={t('acg.services.eyebrow')} title={t('acg.services.title')}>
+    <div class="svc-grid">
+      {services.map((s) => <ServiceCard name={s.name} role={s.role} port={s.port} stack={s.stack} />)}
+    </div>
+  </Section>
+
+  <Section flush band="surface" eyebrow={t('acg.highlights.eyebrow')} title={t('acg.highlights.title')}>
+    <div class="hl-grid">
+      {
+        highlights.map((h) => (
+          <article class="hl" data-reveal>
+            <h3 class="hl__title">{h.title}</h3>
+            <p class="hl__note">{h.note}</p>
+          </article>
+        ))
+      }
+    </div>
+  </Section>
+
+  <StatRow items={stats} />
+
+  <Section flush class="acg-band-tint" eyebrow={t('acg.honesty.eyebrow')} title={t('acg.honesty.title')}>
+    <p class="prose" data-reveal>{t('acg.honesty.body')}</p>
+  </Section>
+
+  <nav class="ddnav container" aria-label="Navegación entre proyectos">
+    <a class="ddnav__link mono" href={`/${locale}/#proyectos`}>{t('acg.nav.back')}</a>
+    <a class="ddnav__link ddnav__next mono" href={`/${locale}/duna`}>{t('acg.nav.next')}</a>
+  </nav>
+</Base>
+
+<style>
+  /* Bandas alternas con "toque de color" (eco del hero): glow radial de --family. Se
+     aplica a voz/microservicios/honestidad para dar vidilla; las claras quedan limpias.
+     El glow va en una capa ::before con máscara que lo desvanece arriba y abajo (igual
+     que las bandas de Section), para que NO se recorte en el borde de la sección y el
+     cambio entre secciones sea un degradado y no un corte. Va con :global porque el
+     <section> lo pinta el componente Section. */
+  :global(.acg-band-tint) {
+    position: relative;
+  }
+  :global(.acg-band-tint)::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    --feather: 72px;
+    background:
+      radial-gradient(72% 68% at 84% 0%,
+        color-mix(in srgb, var(--family) 13%, transparent), transparent 72%),
+      radial-gradient(56% 78% at 2% 100%,
+        color-mix(in srgb, var(--family) 7%, transparent), transparent 70%);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--feather),
+      #000 calc(100% - var(--feather)),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--feather),
+      #000 calc(100% - var(--feather)),
+      transparent 100%
+    );
+  }
+
+  .prose {
+    font-size: var(--step-1);
+    color: var(--text-muted);
+    max-width: 68ch;
+  }
+  .featured {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    margin-block: var(--sp-6) var(--sp-7);
+    padding: var(--sp-5);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    /* En banda clara (surface): la tarjeta usa surface-2 para no aplanarse. */
+    background: var(--surface-2);
+  }
+  .featured__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .featured__label {
+    font-size: 0.72rem;
+    color: var(--family);
+    background: var(--family-soft);
+    padding: 0.25rem 0.7rem;
+    border-radius: var(--r-pill);
+  }
+  .featured__flow { display: flex; align-items: center; gap: var(--sp-2); }
+  .featured__flow-name { font-family: var(--font-display); font-weight: 600; font-size: var(--step-1); }
+  .featured__flow-badge {
+    font-size: 0.68rem;
+    color: var(--ok);
+    background: color-mix(in srgb, var(--ok) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ok) 30%, transparent);
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--r-pill);
+  }
+  .featured__note {
+    font-size: var(--step-1);
+    color: var(--text-muted);
+    line-height: 1.5;
+    max-width: 60ch;
+  }
+  /* El carrusel coverflow va en su propio bloque bajo la tarjeta de intro. El componente
+     ya se autolimita el ancho y centra; aquí solo damos aire arriba. */
+  .featured__bleed {
+    margin-top: var(--sp-6);
+  }
+  .svc-grid {
+    display: grid;
+    gap: var(--sp-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 620px) {
+    .svc-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 960px) {
+    .svc-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .hl-grid {
+    display: grid;
+    gap: var(--sp-4);
+  }
+  @media (min-width: 720px) {
+    .hl-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .hl {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding: var(--sp-5);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--family);
+    border-radius: var(--r-md);
+    /* En banda clara (surface): surface-2 para que la tarjeta destaque. */
+    background: var(--surface-2);
+  }
+  .hl__title { font-size: var(--step-1); }
+  .hl__note {
+    color: var(--text-muted);
+    max-width: none;
+    line-height: 1.55;
+  }
+  .samples {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    max-width: 46rem;
+  }
+  .ddnav {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    padding-block: var(--sp-8);
+    border-top: 1px solid var(--border);
+  }
+  .ddnav__link {
+    font-size: var(--step-0);
+    text-decoration: none;
+    color: var(--text-muted);
+  }
+  .ddnav__link:hover { color: var(--family); }
+  .ddnav__next { color: var(--family); }
+</style>

@@ -1,0 +1,114 @@
+---
+import { type Locale, useTranslations } from '../i18n/utils';
+import ThemeToggle from './ThemeToggle.astro';
+import LangSwitcher from './LangSwitcher.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const base = `/${locale}`;
+
+const links = [
+  { href: `${base}/#proyectos`, label: t('nav.projects') },
+  { href: `${base}/#sobre-mi`, label: t('nav.about') },
+  { href: `${base}/#contacto`, label: t('nav.contact') },
+];
+---
+
+<header class="nav">
+  <div class="container nav__inner">
+    <a class="brand" href={`${base}/`}>
+      <span class="brand__mark mono" aria-hidden="true">EC</span>
+      <span class="brand__text">
+        <span class="brand__name">Èric Casanovas</span>
+        <span class="brand__handle mono">@erico089dev</span>
+      </span>
+    </a>
+
+    <nav class="nav__links" aria-label="Principal">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+
+    <div class="nav__actions">
+      <LangSwitcher locale={locale} />
+      <ThemeToggle />
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: saturate(1.2) blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    min-height: 3.75rem;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-3);
+    text-decoration: none;
+    color: var(--text);
+  }
+  .brand__mark {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--accent-ink);
+    background: var(--accent);
+    border-radius: var(--r-sm);
+  }
+  .brand__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  .brand__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .brand__handle {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+  .nav__links {
+    display: none;
+    gap: var(--sp-5);
+  }
+  .nav__links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: var(--step-0);
+    font-weight: 550;
+  }
+  .nav__links a:hover {
+    color: var(--text);
+  }
+  .nav__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+  @media (min-width: 800px) {
+    .nav__links {
+      display: inline-flex;
+    }
+  }
+</style>

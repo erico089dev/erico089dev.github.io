@@ -1,0 +1,113 @@
+---
+// Pipeline ACG. SVG inline → temeable con los tokens (var(--family) = violeta en /es/acg).
+---
+
+<svg class="d-svg" viewBox="0 0 920 344" role="presentation" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="acg-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M1 1 L8 4.5 L1 8 Z" class="d-arrowhead" />
+    </marker>
+  </defs>
+
+  <!-- Orquestador -->
+  <rect class="d-orch" x="55" y="20" width="810" height="56" rx="8" />
+  <text class="d-title" x="460" y="45" text-anchor="middle">ACGAutomation</text>
+  <text class="d-sub" x="460" y="64" text-anchor="middle">orquestador · flows plugin · DAG en YAML · health-gating</text>
+
+  <!-- Líneas de control (orquestador → cada etapa) -->
+  <line class="d-ctrl" x1="148" y1="76" x2="148" y2="158" />
+  <line class="d-ctrl" x1="356" y1="76" x2="356" y2="158" />
+  <line class="d-ctrl" x1="564" y1="76" x2="564" y2="158" />
+  <line class="d-ctrl" x1="772" y1="76" x2="772" y2="158" />
+
+  <!-- Etapas -->
+  <g>
+    <rect class="d-box" x="55" y="158" width="186" height="98" rx="8" />
+    <text class="d-title" x="71" y="186">Fuentes</text>
+    <text class="d-sub" x="71" y="208">Reddit</text>
+    <text class="d-sub" x="71" y="226">Wikipedia</text>
+    <text class="d-sub" x="71" y="244">YouTube (yt-dlp)</text>
+  </g>
+  <g>
+    <rect class="d-box" x="263" y="158" width="186" height="98" rx="8" />
+    <text class="d-title" x="279" y="186">ACGAIAPI</text>
+    <text class="d-sub" x="279" y="208">LLMs ×4 · TTS ×5</text>
+    <text class="d-sub" x="279" y="226">clonación de voz</text>
+    <text class="d-sub" x="279" y="244">captioning con visión</text>
+  </g>
+  <g>
+    <rect class="d-box" x="471" y="158" width="186" height="98" rx="8" />
+    <text class="d-title" x="487" y="186">ACGVideoEditorAPI</text>
+    <text class="d-sub" x="487" y="208">MoviePy · FFmpeg</text>
+    <text class="d-sub" x="487" y="226">Whisper · subtítulos</text>
+    <text class="d-sub" x="487" y="244">multi-personaje</text>
+  </g>
+  <g>
+    <rect class="d-box" x="679" y="158" width="186" height="98" rx="8" />
+    <text class="d-title" x="695" y="186">ACGIGScheduler</text>
+    <text class="d-sub" x="695" y="208">R2 · GH Actions</text>
+    <text class="d-sub" x="695" y="226">IG Graph API</text>
+    <text class="d-sub" x="695" y="244">serverless</text>
+  </g>
+
+  <!-- Flechas de flujo -->
+  <line class="d-flow" x1="241" y1="207" x2="261" y2="207" />
+  <line class="d-flow" x1="449" y1="207" x2="469" y2="207" />
+  <line class="d-flow" x1="657" y1="207" x2="677" y2="207" />
+
+  <!-- Salida -->
+  <line class="d-flow" x1="772" y1="256" x2="772" y2="286" />
+  <rect class="d-pill" x="647" y="286" width="250" height="42" rx="21" />
+  <text class="d-pill-txt" x="772" y="312" text-anchor="middle">▶ Reels / Shorts publicados</text>
+</svg>
+
+<style>
+  .d-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-width: 660px;
+  }
+  .d-box {
+    fill: var(--surface);
+    stroke: var(--border);
+    stroke-width: 1.5;
+  }
+  .d-orch,
+  .d-pill {
+    fill: var(--family-soft);
+    stroke: var(--family);
+    stroke-width: 1.5;
+  }
+  .d-title {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    fill: var(--text);
+  }
+  .d-sub {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    fill: var(--text-muted);
+  }
+  .d-pill-txt {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    fill: var(--family);
+  }
+  .d-flow {
+    stroke: var(--family);
+    stroke-width: 2;
+    marker-end: url(#acg-arrow);
+  }
+  .d-arrowhead {
+    fill: var(--family);
+  }
+  .d-ctrl {
+    stroke: var(--family);
+    stroke-width: 1.3;
+    stroke-dasharray: 3 4;
+    opacity: 0.5;
+  }
+</style>

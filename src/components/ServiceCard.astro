@@ -1,0 +1,87 @@
+---
+interface Props {
+  name: string;
+  role: string;
+  port?: string;
+  stack?: string[];
+}
+
+const { name, role, port, stack = [] } = Astro.props;
+---
+
+<article class="svc" data-reveal>
+  <div class="svc__head">
+    <h3 class="svc__name mono">{name}</h3>
+    {port && <span class="svc__port mono">{port}</span>}
+  </div>
+  <p class="svc__role">{role}</p>
+  {
+    stack.length > 0 && (
+      <ul class="svc__stack">
+        {stack.map((s) => (
+          <li class="svc__chip mono">{s}</li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  .svc {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding: var(--sp-4);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    height: 100%;
+    transition: border-color 0.2s var(--ease), transform 0.15s var(--ease);
+  }
+  .svc:hover {
+    border-color: color-mix(in srgb, var(--family) 45%, var(--border));
+    transform: translateY(-2px);
+  }
+  .svc__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-2);
+  }
+  .svc__name {
+    font-size: var(--step-0);
+    font-weight: 500;
+    color: var(--text);
+  }
+  .svc__port {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: var(--r-sm);
+    color: var(--family);
+    background: color-mix(in srgb, var(--family) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--family) 30%, transparent);
+    white-space: nowrap;
+  }
+  .svc__role {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+    max-width: none;
+    line-height: 1.5;
+  }
+  .svc__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-1);
+    list-style: none;
+    padding: 0;
+    margin-top: auto;
+    padding-top: var(--sp-2);
+  }
+  .svc__chip {
+    font-size: 0.68rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--r-sm);
+    color: var(--text-muted);
+    background: var(--surface-2);
+  }
+</style>

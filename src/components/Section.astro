@@ -1,0 +1,93 @@
+---
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  class?: string;
+  /** Quita la línea divisoria superior (opt-in; el resto de páginas la conserva). */
+  flush?: boolean;
+  /** Banda de fondo a sangre. Implica `flush`. */
+  band?: 'bg' | 'surface';
+}
+
+const { id, eyebrow, title, class: className = '', flush = false, band } = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={[
+    'section',
+    (flush || band) && 'section--flush',
+    band === 'surface' && 'section--band-surface',
+    band === 'bg' && 'section--band-bg',
+    className,
+  ]}
+>
+  <div class="container">
+    {
+      (eyebrow || title) && (
+        <header class="section__head" data-reveal>
+          {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+          {title && <h2>{title}</h2>}
+        </header>
+      )
+    }
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--sp-9);
+    border-top: 1px solid var(--border);
+    position: relative;
+  }
+  /* Variante sin línea: la separación la da el espaciado o la banda de fondo. */
+  .section--flush {
+    border-top: none;
+  }
+  /* Bandas de color con bordes DIFUMINADOS: el color va en una capa ::before cuyo
+     borde superior e inferior se desvanece hacia el fondo de la página, así el
+     cambio entre secciones es un degradado suave y no un corte seco. Aplica en
+     todas las páginas (el color real lo pone cada banda; la máscara es común). */
+  .section--band-surface,
+  .section--band-bg {
+    background: transparent;
+  }
+  .section--band-surface::before,
+  .section--band-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    --feather: 72px;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--feather),
+      #000 calc(100% - var(--feather)),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--feather),
+      #000 calc(100% - var(--feather)),
+      transparent 100%
+    );
+  }
+  .section--band-surface::before { background: var(--surface); }
+  .section--band-bg::before { background: var(--bg); }
+  /* El contenido va por encima de la capa de color. */
+  .section > .container {
+    position: relative;
+    z-index: 1;
+  }
+  .section__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-6);
+  }
+</style>

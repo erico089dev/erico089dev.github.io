@@ -1,0 +1,156 @@
+---
+// Fondo ambiental del hero de la home: una "constelación" con los 4 colores de
+// proyecto (acg / duna / inbox / cumple). CSS puro, sin JS. Reutiliza el truco de
+// deriva de DunaDuneField (un contenedor sobredimensionado que mueve todo el grupo
+// junto, así las líneas entre nodos nunca se desalinean) y los halos que respiran de
+// duna.astro (.disc__halo). Decorativo → aria-hidden.
+//
+// Coordenadas en % del campo; las líneas SVG usan las mismas y preserveAspectRatio
+// "none" + vector-effect no escalado, de modo que sus extremos caen exactamente en
+// los nodos sea cual sea el aspecto del contenedor.
+const nodes = [
+  { family: 'acg', x: 58, y: 22 },
+  { family: 'duna', x: 83, y: 15 },
+  { family: 'inbox', x: 90, y: 53 },
+  { family: 'cumple', x: 64, y: 68 },
+];
+// Anillo cerrado: acg → duna → inbox → cumple → acg.
+const links = [
+  [0, 1],
+  [1, 2],
+  [2, 3],
+  [3, 0],
+];
+---
+
+<div class="constel" aria-hidden="true">
+  <div class="constel__drift">
+    <svg
+      class="constel__lines"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {
+        links.map(([a, b]) => (
+          <line
+            x1={nodes[a].x}
+            y1={nodes[a].y}
+            x2={nodes[b].x}
+            y2={nodes[b].y}
+          />
+        ))
+      }
+    </svg>
+    {
+      nodes.map((n, i) => (
+        <span
+          class:list={['constel__node', `constel__node--${n.family}`]}
+          style={`--x:${n.x};--y:${n.y};--i:${i}`}
+        >
+          <span class="constel__halo" />
+          <span class="constel__dot" />
+        </span>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .constel {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    /* Se difumina hacia el texto (izquierda) y hacia abajo, para no competir con el
+       titular. La constelación vive sobre todo en la franja superior derecha. */
+    mask-image: radial-gradient(130% 120% at 82% 6%, #000 30%, transparent 82%);
+  }
+  /* Deriva lenta de TODO el grupo junto (líneas + nodos), como en DunaDuneField. */
+  .constel__drift {
+    position: absolute;
+    inset: -8% -6%;
+    width: 112%;
+    height: 116%;
+    animation: constel-drift 18s ease-in-out infinite;
+  }
+  .constel__lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .constel__lines line {
+    stroke: var(--border-strong);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    opacity: 0.5;
+    animation: constel-line 7s ease-in-out infinite;
+  }
+
+  .constel__node {
+    position: absolute;
+    left: calc(var(--x) * 1%);
+    top: calc(var(--y) * 1%);
+    transform: translate(-50%, -50%);
+  }
+  .constel__node--acg { --c: var(--acg); }
+  .constel__node--duna { --c: var(--duna); }
+  .constel__node--inbox { --c: var(--inbox); }
+  .constel__node--cumple { --c: var(--cumple); }
+
+  /* Halo difuminado que "respira", desfasado por nodo (--i). */
+  .constel__halo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, var(--c) 0%, transparent 68%);
+    filter: blur(22px);
+    opacity: 0.45;
+    animation: constel-breathe 6s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -1.5s);
+  }
+  .constel__dot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--c);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 22%, transparent);
+    animation: constel-breathe 6s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -1.5s);
+  }
+
+  @keyframes constel-drift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-2.4%, 1.6%); }
+  }
+  @keyframes constel-breathe {
+    0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.94); }
+    50% { opacity: 0.62; transform: translate(-50%, -50%) scale(1.08); }
+  }
+  @keyframes constel-line {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .constel__drift,
+    .constel__halo,
+    .constel__dot,
+    .constel__lines line {
+      animation: none;
+    }
+    /* Estado en reposo legible: nodos y líneas fijos, sin pulso. */
+    .constel__halo { opacity: 0.4; }
+    .constel__dot { transform: translate(-50%, -50%) scale(1); }
+  }
+</style>

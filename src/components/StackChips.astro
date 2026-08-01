@@ -1,0 +1,30 @@
+---
+interface Props {
+  items: string[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="chips">
+  {items.map((item) => <li class="chip mono">{item}</li>)}
+</ul>
+
+<style>
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    list-style: none;
+    padding: 0;
+  }
+  .chip {
+    font-size: var(--step--1);
+    font-weight: 500;
+    padding: 0.28rem 0.6rem;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+  }
+</style>

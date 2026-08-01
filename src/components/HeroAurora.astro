@@ -1,0 +1,86 @@
+---
+// OPCIÓN B — Aurora de luz cálida. Manchas de luz difuminadas (radial-gradients con
+// blur) que fluyen y mutan lento, como una nebulosa cálida. CSS puro, sin JS.
+// Reemplaza la rejilla + negro plano por luz ambiental en movimiento. Colores cálidos
+// desde tokens, así que se retema solo en claro/oscuro. Decorativo → aria-hidden.
+---
+
+<div class="aurora" aria-hidden="true">
+  <span class="aurora__blob aurora__blob--1"></span>
+  <span class="aurora__blob aurora__blob--2"></span>
+  <span class="aurora__blob aurora__blob--3"></span>
+  <span class="aurora__blob aurora__blob--4"></span>
+</div>
+
+<style>
+  .aurora {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    /* Se difumina hacia el borde inferior para fundir con la sección siguiente. */
+    mask-image: radial-gradient(130% 120% at 60% 20%, #000 45%, transparent 92%);
+  }
+  .aurora__blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(72px);
+    opacity: 0.55;
+    will-change: transform;
+  }
+  .aurora__blob--1 {
+    width: 40rem;
+    height: 40rem;
+    right: -8rem;
+    top: -12rem;
+    background: radial-gradient(circle, var(--accent), transparent 66%);
+    animation: aurora-a 24s ease-in-out infinite;
+  }
+  .aurora__blob--2 {
+    width: 34rem;
+    height: 34rem;
+    right: 12rem;
+    top: 4rem;
+    background: radial-gradient(circle,
+      color-mix(in srgb, var(--accent) 65%, var(--inbox)), transparent 66%);
+    animation: aurora-b 30s ease-in-out infinite;
+  }
+  .aurora__blob--3 {
+    width: 30rem;
+    height: 30rem;
+    left: 4rem;
+    top: -6rem;
+    background: radial-gradient(circle,
+      color-mix(in srgb, var(--accent) 55%, var(--cumple)), transparent 68%);
+    opacity: 0.4;
+    animation: aurora-c 27s ease-in-out infinite;
+  }
+  .aurora__blob--4 {
+    width: 26rem;
+    height: 26rem;
+    right: 30%;
+    bottom: -10rem;
+    background: radial-gradient(circle, var(--accent), transparent 68%);
+    opacity: 0.35;
+    animation: aurora-d 33s ease-in-out infinite;
+  }
+  @keyframes aurora-a {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-5rem, 4rem) scale(1.14); }
+  }
+  @keyframes aurora-b {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(4rem, 5rem) scale(0.86); }
+  }
+  @keyframes aurora-c {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(6rem, 3rem) scale(1.2); }
+  }
+  @keyframes aurora-d {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-4rem, -5rem) scale(1.1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .aurora__blob { animation: none; }
+  }
+</style>

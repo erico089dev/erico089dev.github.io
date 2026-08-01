@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="404 — página no encontrada · Èric Casanovas Pérez" description="Esta página no existe.">
+  <div class="container notfound">
+    <p class="eyebrow" data-reveal>Error 404</p>
+    <h1 data-reveal>Esta ruta no existe</h1>
+    <p class="notfound__lede" data-reveal>
+      El enlace está roto o la página se movió. Vuelve al inicio y sigue desde ahí.
+    </p>
+    <p class="notfound__cta" data-reveal>
+      <a class="btn" href="/es/">← Volver al inicio</a>
+    </p>
+  </div>
+</Base>
+
+<style>
+  .notfound {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    padding-block: var(--sp-10) var(--sp-9);
+    min-height: 50vh;
+  }
+  .notfound__lede {
+    font-size: var(--step-1);
+    color: var(--text-muted);
+    max-width: 50ch;
+  }
+  .notfound__cta {
+    margin-top: var(--sp-3);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: 0.7rem 1.2rem;
+    border-radius: var(--r-md);
+    font-weight: 600;
+    text-decoration: none;
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .btn:hover {
+    background: color-mix(in srgb, var(--accent) 88%, #000);
+  }
+</style>

@@ -1,0 +1,103 @@
+---
+// OPCIÓN A — Ondas topográficas (tipo dunas). Líneas de contorno cálidas que ondulan
+// y se redibujan sin parar. Reutiliza la técnica de DunaDuneField: varias capas
+// (variantes de la misma forma) que hacen crossfade + una deriva del grupo, para
+// morphing continuo SIN JS. Las paths se generan paramétricamente con senos.
+// Decorativo → aria-hidden.
+const W = 1200;
+const H = 620;
+const VARIANTS = 3;
+const LINES = 16;
+
+function contour(baseY: number, amp: number, phase: number, freq: number): string {
+  const steps = 26;
+  let d = '';
+  for (let i = 0; i <= steps; i++) {
+    const x = (i / steps) * W;
+    const y = baseY + amp * Math.sin((i / steps) * Math.PI * 2 * freq + phase);
+    d += (i === 0 ? 'M' : ' L') + x.toFixed(1) + ' ' + y.toFixed(1);
+  }
+  return d;
+}
+
+const variants = Array.from({ length: VARIANTS }, (_, v) =>
+  Array.from({ length: LINES }, (_, l) => {
+    const baseY = 40 + l * ((H - 80) / (LINES - 1));
+    const amp = 16 + (l % 4) * 7;
+    const phase = v * 1.4 + l * 0.5;
+    const freq = 1.2 + (l % 3) * 0.35;
+    return contour(baseY, amp, phase, freq);
+  })
+);
+---
+
+<div class="waves" aria-hidden="true">
+  <div class="waves__drift">
+    {
+      variants.map((lines, i) => (
+        <svg
+          class="waves__layer"
+          style={`--i:${i}`}
+          viewBox={`0 0 ${W} ${H}`}
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {lines.map((d) => (
+            <path d={d} />
+          ))}
+        </svg>
+      ))
+    }
+  </div>
+</div>
+
+<style define:vars={{ count: 3 }}>
+  .waves {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    mask-image: radial-gradient(130% 120% at 50% 30%, #000 45%, transparent 92%);
+  }
+  .waves__drift {
+    position: absolute;
+    inset: -8% -8%;
+    width: 116%;
+    height: 116%;
+    animation: waves-drift 16s ease-in-out infinite;
+  }
+  .waves__layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    fill: none;
+    filter: blur(0.6px);
+    opacity: 0;
+    animation: waves-fade calc(var(--count) * 6s) ease-in-out infinite;
+    animation-delay: calc(var(--i) * -6s);
+  }
+  .waves__layer path {
+    stroke: var(--accent);
+    stroke-width: 1.4;
+    opacity: 0.55;
+    vector-effect: non-scaling-stroke;
+  }
+  @keyframes waves-fade {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    33% { opacity: 1; }
+    43% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+  @keyframes waves-drift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-3%, 2%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .waves__drift { animation: none; }
+    .waves__layer { animation: none; opacity: 0; }
+    .waves__layer:first-child { opacity: 1; }
+  }
+</style>

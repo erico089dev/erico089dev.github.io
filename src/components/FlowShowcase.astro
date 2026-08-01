@@ -1,0 +1,435 @@
+---
+// Explorador interactivo de los flujos de ACG. Eliges un flujo (tabs) y a la IZQUIERDA aparece un
+// móvil DESLIZABLE con sus pasos; a la DERECHA, el texto describe el paso que tienes centrado y va
+// cambiando al deslizar / con flechas / con los puntos. Pasos reales de flows_metadata.yaml.
+// JS mínimo (progresivo: sin JS se ve el primer flujo y su primer paso).
+import type { AcgFlow, StepType } from '../data/acgFlows';
+
+interface Labels { heading: string; hint: string; auto: string; semi: string; step: string }
+interface Props {
+  flows: AcgFlow[];
+  legend: Record<StepType, string>;
+  stepsLabel?: string;
+  labels: Labels;
+}
+const { flows, legend, stepsLabel = 'pasos', labels } = Astro.props;
+
+const ICON: Record<StepType, string> = {
+  source: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="7" ry="3"/><path d="M5 5.5v13c0 1.7 3.1 3 7 3s7-1.3 7-3v-13"/><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg>`,
+  prompt: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3v18M3 12h18M6 6l12 12M18 6L6 18"/></svg>`,
+  process: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>`,
+  service: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M7 5l-1.5 4M12 5l-1.5 4M17 5l-1.5 4"/></svg>`,
+  publish: `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M8 8l4-4 4 4M5 16v3a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3"/></svg>`,
+};
+const legendTypes = Object.keys(legend) as StepType[];
+---
+
+<div class="fshow">
+  <p class="fshow__heading">{labels.heading}</p>
+
+  <div class="fshow__tabs" role="tablist" aria-label="Flujos de ACG">
+    {
+      flows.map((f, i) => (
+        <button
+          type="button"
+          class:list={['fshow__tab', i === 0 && 'is-active']}
+          data-flow-tab={f.id}
+          role="tab"
+          aria-selected={i === 0 ? 'true' : 'false'}
+        >
+          {f.name}
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="fshow__panels">
+    {
+      flows.map((f, i) => {
+        const first = f.steps[0];
+        return (
+          <section
+            class:list={['fshow__panel', i === 0 && 'is-active']}
+            data-flow-panel={f.id}
+            aria-label={f.name}
+          >
+            {/* IZQUIERDA · slider */}
+            <div class="fshow__stage">
+              <div class="fshow__phone">
+                <span class="fshow__notch" />
+                <div class="fshow__track">
+                  {f.steps.map((s, si) => (
+                    <div
+                      class:list={['fcard', `fcard--${s.type}`, si === 0 && 'is-current']}
+                      data-step-idx={si}
+                      data-step-name={s.name}
+                      data-step-desc={s.desc}
+                      data-step-type={s.type}
+                    >
+                      <span class="fcard__idx mono">{si + 1} / {f.steps.length}</span>
+                      <span class="fcard__ico" set:html={ICON[s.type]} />
+                      <span class="fcard__name">{s.name}</span>
+                      <span class="fcard__type mono">{legend[s.type]}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div class="fshow__nav">
+                <button type="button" class="fshow__arrow" data-dir="-1" aria-label="Anterior">‹</button>
+                <div class="fshow__dots">
+                  {f.steps.map((_, di) => (
+                    <button type="button" class:list={['fshow__dot', di === 0 && 'is-on']} data-dot={di} aria-label={`${labels.step} ${di + 1}`} />
+                  ))}
+                </div>
+                <button type="button" class="fshow__arrow" data-dir="1" aria-label="Siguiente">›</button>
+              </div>
+            </div>
+
+            {/* DERECHA · texto */}
+            <div class="fshow__info">
+              <div class="fshow__head">
+                <h3 class="fshow__name">{f.name}</h3>
+                <span class:list={['fshow__badge', `fshow__badge--${f.automation}`]}>
+                  {f.automation === 'auto' ? labels.auto : labels.semi}
+                </span>
+                <span class="fshow__count mono">{f.steps.length} {stepsLabel}</span>
+              </div>
+              <p class="fshow__desc">{f.description}</p>
+
+              <div class:list={['fshow__now', `fshow__now--${first.type}`]} data-now>
+                <span class="fshow__now-idx mono" data-now-idx>1 / {f.steps.length}</span>
+                <h4 class="fshow__now-name" data-now-name>{first.name}</h4>
+                <p class="fshow__now-desc" data-now-desc>{first.desc}</p>
+              </div>
+
+              <ul class="fshow__legend">
+                {legendTypes.map((tp) => (
+                  <li class:list={['fshow__leg', `fshow__leg--${tp}`]}>
+                    <span class="fshow__leg-dot" />
+                    {legend[tp]}
+                  </li>
+                ))}
+              </ul>
+              <p class="fshow__hint mono">{labels.hint}</p>
+            </div>
+          </section>
+        );
+      })
+    }
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.fshow').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLElement>('[data-flow-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-flow-panel]'));
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.flowTab;
+        tabs.forEach((t) => {
+          const on = t === tab;
+          t.classList.toggle('is-active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        panels.forEach((p) => p.classList.toggle('is-active', p.dataset.flowPanel === id));
+      });
+    });
+
+    panels.forEach((panel) => {
+      const track = panel.querySelector<HTMLElement>('.fshow__track');
+      const cards = Array.from(panel.querySelectorAll<HTMLElement>('.fcard'));
+      const now = panel.querySelector<HTMLElement>('[data-now]');
+      const idxEl = panel.querySelector<HTMLElement>('[data-now-idx]');
+      const nameEl = panel.querySelector<HTMLElement>('[data-now-name]');
+      const descEl = panel.querySelector<HTMLElement>('[data-now-desc]');
+      const dots = Array.from(panel.querySelectorAll<HTMLElement>('.fshow__dot'));
+      if (!track || !now || !cards.length) return;
+
+      let current = 0;
+      const sync = () => {
+        const box = track.getBoundingClientRect();
+        const center = box.left + box.width / 2;
+        let best = 0;
+        let bestD = Infinity;
+        cards.forEach((card, i) => {
+          const r = card.getBoundingClientRect();
+          const d = Math.abs(r.left + r.width / 2 - center);
+          if (d < bestD) { bestD = d; best = i; }
+        });
+        current = best;
+        const card = cards[best];
+        if (idxEl) idxEl.textContent = `${best + 1} / ${cards.length}`;
+        if (nameEl) nameEl.textContent = card.dataset.stepName ?? '';
+        if (descEl) descEl.textContent = card.dataset.stepDesc ?? '';
+        now.dataset.type = card.dataset.stepType ?? '';
+        now.className = `fshow__now fshow__now--${card.dataset.stepType}`;
+        cards.forEach((c, i) => c.classList.toggle('is-current', i === best));
+        dots.forEach((d, i) => d.classList.toggle('is-on', i === best));
+      };
+
+      const goTo = (i: number) => {
+        const t = Math.max(0, Math.min(cards.length - 1, i));
+        cards[t].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      };
+
+      let raf = 0;
+      track.addEventListener('scroll', () => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(sync);
+      }, { passive: true });
+
+      panel.querySelectorAll<HTMLElement>('.fshow__arrow').forEach((btn) => {
+        btn.addEventListener('click', () => goTo(current + Number(btn.dataset.dir)));
+      });
+      dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+      sync();
+    });
+  });
+</script>
+
+<style>
+  .fshow {
+    --c-source: #3b82c4;
+    --c-prompt: var(--family);
+    --c-process: #8a8378;
+    --c-service: var(--accent);
+    --c-publish: var(--ok);
+  }
+  .fshow__heading {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    margin-bottom: var(--sp-4);
+  }
+
+  /* ---- tabs ---- */
+  .fshow__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-6);
+  }
+  .fshow__tab {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    padding: 0.42rem 0.85rem;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color 0.18s var(--ease), color 0.18s var(--ease), background 0.18s var(--ease);
+  }
+  .fshow__tab:hover { color: var(--text); border-color: var(--border-strong); }
+  .fshow__tab.is-active {
+    color: var(--family);
+    border-color: color-mix(in srgb, var(--family) 45%, var(--border));
+    background: var(--family-soft);
+  }
+
+  /* ---- panels ---- */
+  .fshow__panel { display: none; }
+  .fshow__panel.is-active {
+    display: grid;
+    gap: var(--sp-6);
+    align-items: center;
+    animation: fshow-in 0.3s var(--ease);
+  }
+  @media (min-width: 880px) {
+    .fshow__panel.is-active { grid-template-columns: 300px 1fr; gap: var(--sp-8); align-items: stretch; }
+  }
+  @keyframes fshow-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- IZQUIERDA · slider ---- */
+  .fshow__stage { display: flex; flex-direction: column; align-items: center; gap: var(--sp-3); }
+  .fshow__phone {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    aspect-ratio: 9 / 18;
+    border-radius: 26px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .fshow__notch {
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 34%; height: 6px;
+    border-radius: 999px;
+    background: var(--border-strong);
+    opacity: 0.5; z-index: 3;
+  }
+  .fshow__track {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    gap: var(--sp-3);
+    padding: var(--sp-5) var(--sp-4);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    scroll-padding-inline: var(--sp-4);
+  }
+  .fshow__track::-webkit-scrollbar { display: none; }
+
+  .fcard {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-4);
+    text-align: center;
+    padding: var(--sp-5);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    --c: var(--family);
+    transition: border-color 0.2s var(--ease);
+  }
+  .fcard.is-current { border-color: color-mix(in srgb, var(--c) 55%, var(--border)); }
+  .fcard--source { --c: var(--c-source); }
+  .fcard--prompt { --c: var(--c-prompt); }
+  .fcard--process { --c: var(--c-process); }
+  .fcard--service { --c: var(--c-service); }
+  .fcard--publish { --c: var(--c-publish); }
+  .fcard__idx { font-size: 0.72rem; color: var(--text-muted); }
+  .fcard__ico {
+    display: grid;
+    place-items: center;
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    color: var(--c);
+    background: color-mix(in srgb, var(--c) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--c) 34%, transparent);
+  }
+  .fcard__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-2);
+    line-height: 1.15;
+  }
+  .fcard__type {
+    font-size: 0.72rem;
+    color: var(--c);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--c) 12%, transparent);
+  }
+
+  /* nav (flechas + puntos) */
+  .fshow__nav { display: flex; align-items: center; gap: var(--sp-3); }
+  .fshow__arrow {
+    display: grid;
+    place-items: center;
+    width: 2rem; height: 2rem;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.18s var(--ease), border-color 0.18s var(--ease);
+  }
+  .fshow__arrow:hover { color: var(--family); border-color: color-mix(in srgb, var(--family) 45%, var(--border)); }
+  .fshow__dots { display: flex; gap: 0.4rem; }
+  .fshow__dot {
+    width: 8px; height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--border-strong);
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 0.18s var(--ease), background 0.18s var(--ease), transform 0.18s var(--ease);
+  }
+  .fshow__dot.is-on { background: var(--family); opacity: 1; transform: scale(1.25); }
+
+  /* ---- DERECHA · texto ---- */
+  .fshow__info { display: flex; flex-direction: column; gap: var(--sp-3); justify-content: center; }
+  .fshow__head { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+  .fshow__name { font-size: var(--step-3); line-height: 1.05; }
+  .fshow__badge {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--r-pill);
+    border: 1px solid transparent;
+  }
+  .fshow__badge--auto {
+    color: var(--ok);
+    background: color-mix(in srgb, var(--ok) 14%, transparent);
+    border-color: color-mix(in srgb, var(--ok) 30%, transparent);
+  }
+  .fshow__badge--semi {
+    color: var(--family);
+    background: var(--family-soft);
+    border-color: color-mix(in srgb, var(--family) 30%, transparent);
+  }
+  .fshow__count {
+    font-size: 0.72rem;
+    color: var(--family);
+    background: var(--family-soft);
+    padding: 0.18rem 0.6rem;
+    border-radius: var(--r-pill);
+  }
+  .fshow__desc {
+    color: var(--text-muted);
+    font-size: var(--step-1);
+    line-height: 1.5;
+    max-width: 46ch;
+  }
+
+  /* bloque del paso actual (cambia al deslizar) */
+  .fshow__now {
+    --c: var(--family);
+    margin-top: var(--sp-2);
+    padding: var(--sp-4) var(--sp-5);
+    border-radius: var(--r-md);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--c);
+    background: var(--surface);
+  }
+  .fshow__now--source { --c: var(--c-source); }
+  .fshow__now--prompt { --c: var(--c-prompt); }
+  .fshow__now--process { --c: var(--c-process); }
+  .fshow__now--service { --c: var(--c-service); }
+  .fshow__now--publish { --c: var(--c-publish); }
+  .fshow__now-idx { font-size: 0.72rem; color: var(--c); }
+  .fshow__now-name { font-size: var(--step-1); margin-top: var(--sp-1); }
+  .fshow__now-desc { color: var(--text-muted); line-height: 1.5; margin-top: var(--sp-2); }
+
+  /* leyenda de colores */
+  .fshow__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-4);
+    list-style: none;
+    padding: 0;
+    margin: var(--sp-2) 0 0;
+  }
+  .fshow__leg {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+  .fshow__leg-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--lc, var(--family)); }
+  .fshow__leg--source { --lc: var(--c-source); }
+  .fshow__leg--prompt { --lc: var(--c-prompt); }
+  .fshow__leg--process { --lc: var(--c-process); }
+  .fshow__leg--service { --lc: var(--c-service); }
+  .fshow__leg--publish { --lc: var(--c-publish); }
+  .fshow__hint { font-size: 0.74rem; color: var(--text-muted); opacity: 0.8; margin-top: var(--sp-1); }
+</style>

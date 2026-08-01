@@ -1,0 +1,133 @@
+---
+// Diagrama de concepto compacto (vertical): fases del proyecto con iconos y, en la última,
+// los iconos de plataforma. Pensado para la cabecera del deep-dive (llena el espacio con algo visual).
+import PlatformStrip from './PlatformStrip.astro';
+
+interface Stage {
+  label: string;
+  sub?: string;
+  icon?: string;
+  platforms?: string[];
+}
+interface Props {
+  stages: Stage[];
+}
+
+const { stages } = Astro.props;
+
+const ICON: Record<string, string> = {
+  idea: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.6.6 1 1.3 1 2.1V16h6v-.4c0-.8.4-1.5 1-2.1A6 6 0 0 0 12 3Z"/></svg>`,
+  ai: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3v18M3 12h18M6 6l12 12M18 6L6 18"/></svg>`,
+  video: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M7 5l-1.5 4M12 5l-1.5 4M17 5l-1.5 4"/></svg>`,
+  chat: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4 3v-3H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/><path d="M8 9.5h8M8 12.5h5"/></svg>`,
+  mic: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></svg>`,
+  ticket: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2H6a2 2 0 0 1-2-2 2 2 0 0 0 0-4z"/><path d="M14 6.5v11" stroke-dasharray="2 2"/></svg>`,
+  publish: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M8 8l4-4 4 4M5 16v3a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3"/></svg>`,
+  calendar: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/></svg>`,
+  code: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/></svg>`,
+  sparkles: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l1.6 4.4L18 10l-4.4 1.6L12 16l-1.6-4.4L6 10l4.4-1.6z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8z"/></svg>`,
+  heart: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-9.2-8.4C1.3 8.9 2.6 5.5 6 5.5c2 0 3.2 1.2 4 2.4.8-1.2 2-2.4 4-2.4 3.4 0 4.7 3.4 3.2 6.1C19 15.6 12 20 12 20z"/></svg>`,
+  share: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="2.6"/><path d="M2.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="6.5" r="2.2"/><path d="M15.2 12.4A4.7 4.7 0 0 1 21.5 17"/></svg>`,
+};
+---
+
+<figure class="cflow">
+  <ol class="cflow__list">
+    {stages.map((s, i) => (
+      <li class="cflow__item">
+        <div class="cflow__box">
+          {s.icon && ICON[s.icon] && <span class="cflow__ico" set:html={ICON[s.icon]} />}
+          <div class="cflow__txt">
+            <span class="cflow__label">{s.label}</span>
+            {s.sub && <span class="cflow__sub mono">{s.sub}</span>}
+            {s.platforms && s.platforms.length > 0 && (
+              <div class="cflow__platforms">
+                <PlatformStrip items={s.platforms} />
+              </div>
+            )}
+          </div>
+        </div>
+        {i < stages.length - 1 && (
+          <span class="cflow__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+          </span>
+        )}
+      </li>
+    ))}
+  </ol>
+</figure>
+
+<style>
+  .cflow {
+    margin: 0;
+    padding: var(--sp-5);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    background:
+      radial-gradient(80% 60% at 80% 0%, var(--family-soft), transparent 70%),
+      var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .cflow__list {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .cflow__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+  .cflow__box {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    width: 100%;
+    padding: var(--sp-3) var(--sp-4);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--family);
+    border-radius: var(--r-md);
+    background: var(--bg);
+  }
+  .cflow__ico {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: var(--r-md);
+    color: var(--family);
+    background: var(--family-soft);
+  }
+  .cflow__txt {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .cflow__label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-0);
+    line-height: 1.2;
+    color: var(--text);
+  }
+  .cflow__sub {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+  .cflow__platforms {
+    margin-top: var(--sp-2);
+  }
+  .cflow__arrow {
+    display: block;
+    color: var(--family);
+    padding-block: 0.25rem;
+    opacity: 0.85;
+  }
+</style>

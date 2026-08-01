@@ -1,0 +1,160 @@
+---
+// Fondo de hero DEFINITIVO (mezcla): aurora de luz cálida (manchas difuminadas que
+// fluyen) + ondas topográficas MUY sutiles por encima (pocas líneas, tenues) para dar
+// textura sin recargar. CSS puro, sin JS. Usa var(--accent) y var(--accent-2) para el
+// color, de modo que la paleta se puede cambiar desde fuera (se retema solo).
+// Decorativo → aria-hidden.
+const W = 1200;
+const H = 620;
+const VARIANTS = 3;
+const LINES = 6;
+
+function contour(baseY: number, amp: number, phase: number, freq: number): string {
+  const steps = 26;
+  let d = '';
+  for (let i = 0; i <= steps; i++) {
+    const x = (i / steps) * W;
+    const y = baseY + amp * Math.sin((i / steps) * Math.PI * 2 * freq + phase);
+    d += (i === 0 ? 'M' : ' L') + x.toFixed(1) + ' ' + y.toFixed(1);
+  }
+  return d;
+}
+
+const variants = Array.from({ length: VARIANTS }, (_, v) =>
+  Array.from({ length: LINES }, (_, l) => {
+    const baseY = 60 + l * ((H - 120) / (LINES - 1));
+    const amp = 14 + (l % 3) * 8;
+    const phase = v * 1.5 + l * 0.6;
+    const freq = 1.1 + (l % 2) * 0.4;
+    return contour(baseY, amp, phase, freq);
+  })
+);
+---
+
+<div class="blend" aria-hidden="true">
+  <!-- Aurora (base cálida) -->
+  <span class="blend__blob blend__blob--1"></span>
+  <span class="blend__blob blend__blob--2"></span>
+  <span class="blend__blob blend__blob--3"></span>
+  <!-- Ondas topográficas sutiles por encima -->
+  <div class="blend__waves">
+    {
+      variants.map((lines, i) => (
+        <svg
+          class="blend__layer"
+          style={`--i:${i}`}
+          viewBox={`0 0 ${W} ${H}`}
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {lines.map((d) => (
+            <path d={d} />
+          ))}
+        </svg>
+      ))
+    }
+  </div>
+</div>
+
+<style define:vars={{ count: 3 }}>
+  .blend {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    mask-image: radial-gradient(135% 120% at 60% 22%, #000 45%, transparent 94%);
+  }
+
+  /* --- Aurora --- */
+  .blend__blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(74px);
+    will-change: transform;
+  }
+  .blend__blob--1 {
+    width: 42rem;
+    height: 42rem;
+    right: -8rem;
+    top: -12rem;
+    background: radial-gradient(circle, var(--accent), transparent 66%);
+    opacity: 0.5;
+    animation: blend-a 24s ease-in-out infinite;
+  }
+  .blend__blob--2 {
+    width: 34rem;
+    height: 34rem;
+    right: 14rem;
+    top: 3rem;
+    background: radial-gradient(circle, var(--accent-2, var(--accent)), transparent 66%);
+    opacity: 0.42;
+    animation: blend-b 30s ease-in-out infinite;
+  }
+  .blend__blob--3 {
+    width: 30rem;
+    height: 30rem;
+    left: 2rem;
+    top: -4rem;
+    background: radial-gradient(circle, var(--accent), transparent 68%);
+    opacity: 0.3;
+    animation: blend-c 27s ease-in-out infinite;
+  }
+  @keyframes blend-a {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-5rem, 4rem) scale(1.14); }
+  }
+  @keyframes blend-b {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(4rem, 5rem) scale(0.86); }
+  }
+  @keyframes blend-c {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(6rem, 3rem) scale(1.2); }
+  }
+
+  /* --- Ondas sutiles --- */
+  .blend__waves {
+    position: absolute;
+    inset: -6% -6%;
+    width: 112%;
+    height: 112%;
+    animation: blend-drift 18s ease-in-out infinite;
+  }
+  .blend__layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    fill: none;
+    filter: blur(0.6px);
+    opacity: 0;
+    animation: blend-fade calc(var(--count) * 6s) ease-in-out infinite;
+    animation-delay: calc(var(--i) * -6s);
+  }
+  .blend__layer path {
+    stroke: var(--accent);
+    stroke-width: 1.2;
+    opacity: 0.22;
+    vector-effect: non-scaling-stroke;
+  }
+  @keyframes blend-fade {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    33% { opacity: 1; }
+    43% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+  @keyframes blend-drift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-3%, 2%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blend__blob,
+    .blend__waves,
+    .blend__layer { animation: none; }
+    .blend__layer { opacity: 0; }
+    .blend__layer:first-child { opacity: 1; }
+  }
+</style>

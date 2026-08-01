@@ -1,0 +1,200 @@
+---
+import Badge from './Badge.astro';
+import StackChips from './StackChips.astro';
+import PlatformStrip from './PlatformStrip.astro';
+
+interface BadgeItem {
+  label: string;
+  variant?: 'ok' | 'standby' | 'private' | 'accent' | 'family';
+}
+
+interface Props {
+  name: string;
+  full: string;
+  tagline: string;
+  href: string;
+  family: 'acg' | 'duna' | 'inbox' | 'cumple';
+  /** Icono real de la app (si existe); si no, se usa el mark de 2 letras. */
+  icon?: string;
+  stack: string[];
+  badges?: BadgeItem[];
+  cta: string;
+  platforms?: string[];
+  platformsLabel?: string;
+  /** Acento de la card: alterna entre el primario y el secundario de la paleta. */
+  tone?: 'primary' | 'secondary';
+  /** De dónde sale el color: `tone` = dorado/azul de paleta; `family` = color del proyecto; `neutral` = gris apagado. */
+  colorBy?: 'tone' | 'family' | 'neutral';
+}
+
+const {
+  name,
+  full,
+  tagline,
+  href,
+  family,
+  icon,
+  stack,
+  badges = [],
+  cta,
+  platforms = [],
+  platformsLabel,
+  tone = 'primary',
+  colorBy = 'tone',
+} = Astro.props;
+---
+
+<a class="card" href={href} data-family={family} data-tone={tone} data-colorby={colorBy} data-reveal>
+  <div class="card__top">
+    <div class="card__title">
+      {icon ? (
+        <img class="card__mark card__mark--img" src={icon} alt="" width="38" height="38" decoding="async" />
+      ) : (
+        <span class="card__mark mono" aria-hidden="true">{name.slice(0, 2).toUpperCase()}</span>
+      )}
+      <span class="card__names">
+        <span class="card__name">{name}</span>
+        <span class="card__full mono">{full}</span>
+      </span>
+    </div>
+    <div class="card__badges">
+      {badges.map((b) => <Badge variant={b.variant}>{b.label}</Badge>)}
+    </div>
+  </div>
+
+  <p class="card__tagline">{tagline}</p>
+
+  {platforms.length > 0 && <PlatformStrip items={platforms} label={platformsLabel} />}
+
+  <StackChips items={stack} />
+
+  <span class="card__cta mono">
+    {cta}
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  </span>
+</a>
+
+<style>
+  .card {
+    /* La familia de color se activa por data-family, scoped a la card. */
+    --fam: var(--accent);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    padding: var(--sp-5);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    /* Glow radial del color de familia desde la esquina superior (patrón de
+       .feat--wide de Duna), sobre la superficie → la card ya lleva color y
+       profundidad en reposo, no solo la rayita de 3px. */
+    background:
+      radial-gradient(95% 130% at 100% 0%,
+        color-mix(in srgb, var(--fam) 18%, transparent), transparent 62%),
+      color-mix(in srgb, var(--tint) 20%, var(--surface));
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.18s var(--ease), border-color 0.2s var(--ease),
+      box-shadow 0.2s var(--ease);
+  }
+  /* Acento de la card por tono de paleta (alterna dorado/azul), no por proyecto. */
+  .card[data-tone='secondary'] { --fam: var(--accent-2, var(--accent)); }
+  /* Opt-in: cada card lleva el color de SU proyecto (identidad por familia). */
+  .card[data-colorby='family'][data-family='acg'] { --fam: var(--acg); }
+  .card[data-colorby='family'][data-family='duna'] { --fam: var(--duna); }
+  .card[data-colorby='family'][data-family='inbox'] { --fam: var(--inbox); }
+  .card[data-colorby='family'][data-family='cumple'] { --fam: var(--cumple); }
+  /* Neutro: gris apagado (para acompañar sin competir con el proyecto estrella). */
+  .card[data-colorby='neutral'] { --fam: var(--standby); }
+
+  /* Línea de señal superior con el color de familia. */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: var(--fam);
+    opacity: 1;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--fam) 55%, var(--border));
+    box-shadow: var(--shadow), 0 14px 34px -14px color-mix(in srgb, var(--fam) 45%, transparent);
+  }
+
+  .card__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sp-3);
+  }
+  .card__title {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+  .card__mark {
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--fam);
+    background: color-mix(in srgb, var(--fam) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--fam) 35%, transparent);
+    border-radius: var(--r-md);
+  }
+  /* Cuando hay icono real de la app: imagen a sangre en el cuadrado redondeado. */
+  .card__mark--img {
+    object-fit: cover;
+    background: none;
+    padding: 0;
+  }
+  .card__names {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+  .card__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-2);
+  }
+  .card__full {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+  .card__badges {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--sp-1);
+  }
+  .card__tagline {
+    color: var(--text);
+    font-size: var(--step-1);
+    font-weight: 500;
+    line-height: 1.35;
+    max-width: none;
+  }
+  .card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin-top: auto;
+    font-size: var(--step--1);
+    color: var(--fam);
+    letter-spacing: 0.02em;
+  }
+  .card:hover .card__cta svg {
+    transform: translateX(3px);
+  }
+  .card__cta svg {
+    transition: transform 0.18s var(--ease);
+  }
+</style>

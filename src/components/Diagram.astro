@@ -1,0 +1,80 @@
+---
+interface Props {
+  title?: string;
+  caption?: string;
+  ariaLabel?: string;
+  /** Cuando aún no hay SVG, se muestra un placeholder estilizado. */
+  placeholder?: boolean;
+}
+
+const { title, caption, ariaLabel, placeholder = false } = Astro.props;
+const hasSlot = Astro.slots.has('default');
+const showPlaceholder = placeholder || !hasSlot;
+---
+
+<figure class="diagram">
+  <div class="diagram__frame" role="img" aria-label={ariaLabel ?? title}>
+    <div class="diagram__scroll">
+      {
+        showPlaceholder ? (
+          <div class="diagram__placeholder">
+            <span class="diagram__ph-icon mono" aria-hidden="true">◇──▶</span>
+            <span class="diagram__ph-text mono">{title ?? 'Diagrama'} · en construcción</span>
+          </div>
+        ) : (
+          <slot />
+        )
+      }
+    </div>
+  </div>
+  {caption && <figcaption class="diagram__caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .diagram {
+    margin: 0;
+  }
+  .diagram__frame {
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    overflow: hidden;
+  }
+  /* Contenido ancho hace scroll horizontal dentro de su contenedor, nunca desborda la página. */
+  .diagram__scroll {
+    overflow-x: auto;
+    padding: var(--sp-5);
+  }
+  .diagram__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-3);
+    min-height: 12rem;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--r-md);
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        color-mix(in srgb, var(--family) 6%, transparent) 10px,
+        color-mix(in srgb, var(--family) 6%, transparent) 20px
+      );
+    color: var(--text-muted);
+  }
+  .diagram__ph-icon {
+    font-size: var(--step-3);
+    color: var(--family);
+    letter-spacing: 0.1em;
+  }
+  .diagram__ph-text {
+    font-size: var(--step--1);
+  }
+  .diagram__caption {
+    margin-top: var(--sp-3);
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+</style>

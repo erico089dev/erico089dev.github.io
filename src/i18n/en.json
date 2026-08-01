@@ -1,0 +1,468 @@
+{
+  "meta": {
+    "title": "Èric Casanovas Pérez — Portfolio",
+    "description": "Èric Casanovas' personal portfolio: projects in AI, automation and productivity. Content generation, a personal assistant, triage with Claude and a gift website."
+  },
+  "nav": {
+    "projects": "Projects",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "footer": {
+    "tagline": "AI · Automation · Productivity",
+    "repos": "Most of my repos are private — message me if you'd like a look inside or a demo."
+  },
+  "hero": {
+    "kicker": "Full-stack developer · AI solutions",
+    "title": "Hi, I'm Èric.",
+    "subtitle": "Instead of showing you my GitHub and my code, here's a portfolio of my personal projects: the ones I build in my free time to explore, learn and solve my own day-to-day. A look at what I do when no one's asking me to.",
+    "ctaProjects": "See projects",
+    "ctaAbout": "About me",
+    "stack": ["Python", "TypeScript", "React", "Astro", "Docker", "AI agents", "RAG", "LLMs", "Self-hosted"]
+  },
+  "about": {
+    "eyebrow": "About me",
+    "title": "Software, data and AI as leverage",
+    "companyLabel": "At work",
+    "company": [
+      "I started as a software engineer building mobile front-ends, on Android and iOS. Then I moved to my current company, where I began with .NET back-end and some TypeScript front-end. Today, at the same company but on a new team, I work on AI solutions — and there I do a bit of everything: I think through the architecture, I code, I lend a hand with deployments and I act as a bridge between teams.",
+      "I find AI a hugely powerful technology, especially in solutions where it can amplify and reason in a safe, consistent way. It's not about putting AI everywhere: I start from the problem and think about how to solve it — and many of today's problems, the ones that need reasoning, lean heavily on it."
+    ],
+    "personalLabel": "On my own time",
+    "personal": "In my personal work I touch a bit of everything. I've spent a lot of time on video automation, but also on automating my own day-to-day, on infrastructure and deployment, and on trying new tech non-stop. And underneath it all, always the same thing that drives me: AI solutions.",
+    "strengthLabel": "My strong point",
+    "strength": "If anything defines me, it's adaptability. On a foundation of software engineering and data science —and with AI as an ally— I move comfortably outside my own turf: I switch languages, keep making sense of code and project structures that aren't mine, and end up finding my way in unfamiliar environments pretty fast. That ability to adapt is my strongest point.",
+    "cvNote": "Want the formal detail, with dates and companies?",
+    "cvCta": "Download CV",
+    "cvSoonCta": "CV coming soon",
+    "cvSoonHint": "I haven't uploaded the PDF yet — check back soon or just message me.",
+    "doingEyebrow": "What does Èric do?",
+    "moreLabel": "What I do most",
+    "supportLabel": "Also, in support",
+    "primary": [
+      { "id": "api", "label": "Backend & APIs", "desc": "what I touch most" },
+      { "id": "ui", "label": "Interface", "desc": "web and mobile" },
+      { "id": "ai", "label": "AI & automation", "desc": "my turf" },
+      { "id": "arch", "label": "Architecture", "desc": "I design it and validate it with the team" }
+    ],
+    "support": [
+      { "id": "deploy", "label": "Deploy & infra", "desc": "all of it in personal work; at the company, at repo level" },
+      { "id": "solution", "label": "Shaping the solution", "desc": "the what and the how, with business" }
+    ],
+    "swLabel": "Software",
+    "aiLabel": "AI & automation",
+    "sw": ["Python", "FastAPI", ".NET", "TypeScript", "PostgreSQL", "SQL", "Oracle", "Docker", "Kubernetes", "Jenkins"],
+    "ai": ["LLMs and models", "Small & local models", "MCPs", "Tools / function calling", "TTS", "Claude Code", "GitHub Copilot"]
+  },
+  "projects": {
+    "eyebrow": "Projects",
+    "title": "Some of my projects",
+    "note": "Almost all are private repos. If you'd like a look inside any of them, message me and I'll give you access.",
+    "cta": "View project",
+    "starEyebrow": "Flagship project",
+    "othersEyebrow": "Other projects",
+    "items": [
+      {
+        "id": "acg",
+        "family": "acg",
+        "name": "ACG",
+        "full": "Automatic Content Generator",
+        "tagline": "A pipeline that generates and publishes short videos (Reels/Shorts) — with automatic and semi-automatic flows.",
+        "href": "/en/acg",
+        "platformsLabel": "Publishes to",
+        "platforms": ["instagram", "tiktok", "youtube"],
+        "stack": ["9 microservices", "LLMs + cloned voice", "MoviePy/FFmpeg", "R2 + GH Actions"],
+        "badges": [{ "label": "on standby", "variant": "standby" }],
+        "flag": "Flagship project",
+        "emphasis": "My most ambitious project by far — the biggest and most complex.",
+        "stats": [
+          { "value": "9", "label": "microservices" },
+          { "value": "3", "label": "platforms" },
+          { "value": "24/7", "label": "hands-off" }
+        ]
+      },
+      {
+        "id": "duna",
+        "family": "duna",
+        "icon": "/media/duna/icon.webp",
+        "name": "Duna",
+        "full": "My personal assistant",
+        "tagline": "Calendar, tasks and natural-language chat in a single app I use every day.",
+        "href": "/en/duna",
+        "platformsLabel": "Brings together",
+        "platforms": ["google-calendar", "google-tasks", "telegram"],
+        "stack": ["TS monorepo", "PWA + Web Push iOS", "SQLite", "Tailscale"],
+        "badges": [{ "label": "in daily use", "variant": "ok" }]
+      },
+      {
+        "id": "inbox",
+        "family": "inbox",
+        "name": "triagebox",
+        "full": "Audio → ticket → Claude",
+        "tagline": "I turn an audio note into a ticket, and Claude reviews and fixes it for me.",
+        "href": "/en/triagebox",
+        "platformsLabel": "The flow",
+        "platforms": ["mic", "ticket", "claude"],
+        "stack": ["FastAPI", "faster-whisper", "Claude skill", "Multi-tenant"],
+        "badges": [{ "label": "public", "variant": "accent" }]
+      },
+      {
+        "id": "cumple",
+        "family": "cumple",
+        "name": "Cumple",
+        "full": "A gift made with code",
+        "tagline": "An interactive website I made for my partner's birthday. I also enjoy coding for the people I love.",
+        "href": "/en/cumple",
+        "stack": ["HTML/CSS", "Interactive", "Handmade"],
+        "badges": [{ "label": "personal", "variant": "accent" }, { "label": "work in progress", "variant": "standby" }]
+      }
+    ]
+  },
+  "acg": {
+    "meta": {
+      "title": "ACG — Automatic Content Generator · Èric Casanovas Pérez",
+      "description": "A 9-microservice pipeline that generates and publishes short videos 100% automatically: LLMs, voice cloning, video rendering and publishing."
+    },
+    "back": "Projects",
+    "name": "ACG",
+    "full": "Automatic Content Generator",
+    "tagline": "A pipeline that generates and publishes short videos (Reels/Shorts) — with automatic and semi-automatic flows.",
+    "badges": [
+      { "label": "on standby", "variant": "standby" }
+    ],
+    "concept": {
+      "stages": [
+        { "label": "Idea or topic", "icon": "idea" },
+        { "label": "Script, voice & image", "sub": "generated with AI", "icon": "ai" },
+        { "label": "Video editing", "icon": "video" },
+        { "label": "Auto-publishing", "icon": "publish", "platforms": ["instagram", "tiktok", "youtube"] }
+      ]
+    },
+    "stats": [
+      { "value": "9", "label": "microservices" },
+      { "value": "4", "label": "LLM backends" },
+      { "value": "5", "label": "voice engines" },
+      { "value": "7+", "label": "video formats" }
+    ],
+    "gallery": {
+      "eyebrow": "Screenshots",
+      "title": "The system from the inside",
+      "items": [
+        { "caption": "Pipeline control dashboard" },
+        { "caption": "ACGManager · character builder" },
+        { "caption": "An automatically generated Reel" }
+      ]
+    },
+    "voice": {
+      "eyebrow": "Cloned voice",
+      "title": "Listen to a voice generated by the system",
+      "intro": "One of ACG's cores is voice synthesis: I tried almost every relevant open-source TTS engine and built voice cloning on top of several. These are real samples from the pipeline.",
+      "samples": [
+        { "label": "Narration · voice A", "meta": "VoxCPM2 · cloned · ES", "src": "/media/acg/voices/sample_voxcpm2_es.wav" },
+        { "label": "Narration · voice B", "meta": "F5-TTS · cloned · ES", "src": "/media/acg/voices/sample_f5tts_es.wav" },
+        { "label": "Narration · voice C", "meta": "Chatterbox · cloned · ES", "src": "/media/acg/voices/sample_chatterbox_es.wav" },
+        { "label": "Narration · English", "meta": "Chatterbox · EN", "src": "/media/acg/voices/sample_chatterbox_en.wav" },
+        { "label": "Narration · English", "meta": "F5-TTS · EN", "src": "/media/acg/voices/sample_f5tts_en.wav" }
+      ]
+    },
+    "problem": {
+      "eyebrow": "The problem",
+      "title": "Producing social video at scale without touching a thing by hand",
+      "body": "A short-form channel constantly eats ideas, scripts, voice, images, editing and publishing. Doing it by hand doesn't scale. ACG turns that whole flow into a pipeline that researches, writes, narrates with a cloned voice, edits the video and publishes it — end to end, no intervention."
+    },
+    "arch": {
+      "eyebrow": "How it works",
+      "title": "From idea to published Reel",
+      "caption": "A central orchestrator coordinates the sources, AI generation, video editing and publishing. Each piece is an independent service.",
+      "diagramAlt": "ACG pipeline: an orchestrator coordinates data sources, AI generation, video editing and publishing."
+    },
+    "flows": {
+      "eyebrow": "The flows",
+      "title": "8 flows, each a full pipeline",
+      "intro": "ACG's engine is plugin-style: each \"flow\" is a pipeline defined by steps, from the content source to publishing. Adding a new format means writing a flow, without touching the orchestrator. These are the ones built:",
+      "stepsLabel": "steps",
+      "featured": {
+        "label": "See one flow from the inside",
+        "flowName": "Reddit Video",
+        "note": "From a hot Reddit thread to a Reel published on Instagram, TikTok and YouTube. Plays on its own.",
+        "frames": ["/media/acg/reddit-thread.webp", "/media/acg/reddit-comments.webp", "/media/acg/reddit-script.webp", "/media/acg/reddit-frame-2.webp", "/media/acg/reddit-thumb.webp"],
+        "captions": [
+          "Jumps into Reddit and spots a thread that's blowing up",
+          "Pulls the comments apart: data, debate, agreements and pushback",
+          "Refines it all into a script with dialogue",
+          "Builds the video: background, character, subtitles and cloned voice",
+          "And it publishes itself — Instagram, TikTok and YouTube"
+        ],
+        "prev": "Previous step",
+        "next": "Next step",
+        "stepWord": "Step"
+      },
+      "showcase": {
+        "heading": "Pick a flow to see how it works",
+        "hint": "swipe to see the steps →",
+        "auto": "Automatic",
+        "semi": "Semi-automatic",
+        "step": "step"
+      },
+      "legend": {
+        "source": "Source",
+        "prompt": "AI / prompt",
+        "process": "Process",
+        "service": "Render",
+        "publish": "Publish"
+      }
+    },
+    "services": {
+      "eyebrow": "Under the hood",
+      "title": "The 9 microservices",
+      "items": [
+        { "name": "ACGAutomation", "role": "Orchestrator. Plugin-style flows + YAML DAG, dependency health-gating.", "port": "orchestrator", "stack": ["Python", "YAML DAG", "plugins"] },
+        { "name": "ACGAIAPI", "role": "Router of 4 LLM backends + 5 TTS engines with voice cloning + vision captioning.", "port": "AI", "stack": ["LLM router", "TTS", "vision"] },
+        { "name": "ACGVideoEditorAPI", "role": "Video rendering: karaoke subtitles, thumbnails, multi-character conversations.", "port": "render", "stack": ["MoviePy", "FFmpeg", "Whisper"] },
+        { "name": "ACGClipForge", "role": "Semantic clip indexer to reuse footage.", "port": "index", "stack": ["CLIP", "BLIP-2", "ChromaDB"] },
+        { "name": "ACGYotubeAPI", "role": "Ingestion of YouTube sources.", "port": "ingest", "stack": ["yt-dlp", "Python"] },
+        { "name": "ACGKnowledgeGatherer", "role": "Topic research (Reddit and other sources).", "port": "research", "stack": ["Reddit API", "scraping"] },
+        { "name": "ACGIGScheduler", "role": "Serverless publisher: uploads and schedules posts.", "port": "publish", "stack": ["R2", "GH Actions", "IG Graph API"] },
+        { "name": "ACGManager", "role": "Human-in-the-loop panel: character builder and control.", "port": "panel", "stack": ["human-in-loop", "builder"] },
+        { "name": "ACGDashboard", "role": "Pipeline control and metrics interface.", "port": "UI", "stack": ["React 19", "Vite"] }
+      ]
+    },
+    "highlights": {
+      "eyebrow": "What I like most",
+      "title": "Why I enjoyed this project",
+      "items": [
+        { "title": "Real microservices", "note": "A declarative dependency graph with health-gating: each service waits for its dependencies to be healthy before starting its flow." },
+        { "title": "Plugin-style flow engine", "note": "7+ different video formats defined as YAML flows, without touching the orchestrator." },
+        { "title": "AI breadth", "note": "4 LLM backends (cloud + local), 5 TTS engines with voice cloning, SD/ComfyUI for images, CLIP/BLIP-2 and semantic search." },
+        { "title": "Cost hacks", "note": "GitHub Actions as free cron and Cloudflare R2 as a no-bill S3. Self-hosted top to bottom." }
+      ]
+    },
+    "honesty": {
+      "eyebrow": "Honesty",
+      "title": "Where it is today",
+      "body": "ACG is a personal, self-hosted and working project, but right now on standby: I built it to learn how to orchestrate AI microservices end to end, and it did the job. The code is private; message me if you'd like a demo."
+    },
+    "nav": {
+      "back": "← Projects",
+      "next": "Next: Duna →"
+    }
+  },
+  "duna": {
+    "meta": {
+      "title": "Duna — My personal assistant · Èric Casanovas Pérez",
+      "description": "My self-hosted personal assistant: Google Calendar + Google Tasks + natural-language chat, in a single app, from 3 clients."
+    },
+    "back": "Projects",
+    "name": "Duna",
+    "iconAlt": "Duna app icon",
+    "full": "My personal assistant",
+    "tagline": "Calendar, tasks and natural-language chat in a single app I use every day.",
+    "heroLine": "I talk to it, it organizes my day: calendar and tasks, actually unified.",
+    "badges": [
+      { "label": "in daily use", "variant": "ok" }
+    ],
+    "concept": {
+      "stages": [
+        { "label": "You talk to it", "sub": "voice or text, from your phone", "icon": "chat" },
+        { "label": "Duna organises and syncs", "sub": "creates events and tasks for you", "icon": "calendar", "platforms": ["google-calendar", "google-tasks"] },
+        { "label": "You share and coordinate", "sub": "a shared calendar with whoever you like", "icon": "share" }
+      ]
+    },
+    "stats": [
+      { "value": "3", "label": "clients" },
+      { "value": "2", "label": "Google integrations" },
+      { "value": "1", "label": "chat engine" },
+      { "value": "0", "label": "exposed ports" }
+    ],
+    "problem": {
+      "eyebrow": "The problem",
+      "title": "Why I built my own assistant",
+      "intro": "Before Duna I tried a good handful of apps to get organized. None of them solved it all.",
+      "hook": "I needed something no app gave me in one place —and free, on top of that.",
+      "needs": [
+        "Jot things down fast, by voice too",
+        "No forms to fill in",
+        "Add a location without the hassle",
+        "Simple reminders",
+        "Nice and pleasant to use",
+        "A shared calendar with my partner: see her availability and plan together"
+      ],
+      "shot": {
+        "caption": "Add it by voice, in seconds",
+        "src": "/media/duna/chat-claro.webp",
+        "alt": "Duna in light mode, empty chat screen ready to type or talk"
+      },
+      "gallery": [
+        { "caption": "List view, everything that's due", "src": "/media/duna/calendario-lista.webp", "alt": "Duna list view with upcoming events and tasks" },
+        { "caption": "Month view, at a glance", "src": "/media/duna/calendario-mes-detalle.webp", "alt": "Duna month view with a selected day's detail" },
+        { "caption": "And in dark mode, for the evening", "src": "/media/duna/chat-oscuro.webp", "alt": "Duna in dark mode, chat screen" }
+      ],
+      "disconnected": {
+        "caption": "Before Duna: everything lived in its own app, and none of them talked to each other. Jotting something down meant opening two apps and doing it twice.",
+        "calendarLabel": "Google Calendar",
+        "tasksLabel": "Google Tasks"
+      },
+      "solution": "This is how Duna solves it"
+    },
+    "arch": {
+      "eyebrow": "How it works",
+      "title": "Three ways to talk to it, one source of truth",
+      "caption": "I talk to it from the browser, my phone or Telegram. A central chat engine understands what I say and takes it to Google (calendar and tasks), storing locally what Google doesn't keep. All on my private network, nothing exposed to the internet.",
+      "diagramAlt": "Duna architecture: three clients talk to a central chat engine that syncs with Google and stores extras in SQLite, over Tailscale."
+    },
+    "features": {
+      "title": "What makes it special",
+      "items": [
+        { "title": "Truly private", "note": "It lives on my private network; nothing is exposed to the internet and the data is mine alone.", "icon": "lock", "wide": true },
+        { "title": "Like an app on your phone, with alerts", "note": "It installs on your phone and notifies you when it matters, even on iPhone.", "icon": "bell" },
+        { "title": "Every morning, your day in one message", "note": "A summary of what's on that day, without opening anything.", "icon": "sun" },
+        { "title": "Say a time, it creates an event", "note": "And if you don't say a time, it saves it as a task. A detail that changes daily use.", "icon": "clock" }
+      ],
+      "inside": {
+        "label": "Lovingly built under the hood",
+        "note": "TypeScript monorepo, dependency injection, network-free tests, hand-written CSS — all over Tailscale."
+      }
+    },
+    "honesty": {
+      "eyebrow": "In use",
+      "title": "My everyday app",
+      "body": "I use it every day so I don't have to rely on my memory: I jot down tasks the moment they occur to me, save future plans, doctor's appointments, the car's MOT… anything with a date I can't afford to forget. I talk to it by voice while I'm doing something else and it puts each thing in its place, calendar or task. It's not a demo: it's private, self-hosted over Tailscale, with nothing exposed to the internet. If you'd like to see it running, message me.",
+      "shot": {
+        "caption": "No tasks pending, all caught up",
+        "src": "/media/duna/tareas.webp",
+        "alt": "Duna's tasks view in light mode, nothing pending"
+      }
+    },
+    "nav": {
+      "back": "← ACG",
+      "next": "Next: triagebox →"
+    }
+  },
+  "inbox": {
+    "meta": {
+      "title": "triagebox — Audio to ticket, solved by Claude · Èric Casanovas Pérez",
+      "description": "A microservice that turns an audio note into a ticket, and a Claude skill that reviews and acts on it. Generic, multi-tenant and reusable. Open-source and public."
+    },
+    "back": "Projects",
+    "name": "triagebox",
+    "full": "Audio → ticket → Claude",
+    "tagline": "I turn an audio note into a ticket, and Claude reviews and fixes it for me.",
+    "badges": [
+      { "label": "public", "variant": "gold" }
+    ],
+    "concept": {
+      "stages": [
+        { "label": "You record an audio", "sub": "from anywhere", "icon": "mic" },
+        { "label": "A ticket is created", "sub": "transcribed locally", "icon": "ticket" },
+        { "label": "Claude solves it", "sub": "reviews and acts", "icon": "ai" }
+      ]
+    },
+    "stats": [
+      { "value": "3", "label": "ways to record" },
+      { "value": "1", "label": "ticket per audio" },
+      { "value": "1", "label": "Claude skill" },
+      { "value": "public", "label": "open-source", "tone": "secondary" }
+    ],
+    "story": {
+      "eyebrow": "How it works",
+      "title": "From a bug on my phone to something fixed at home",
+      "caption": "I hit a bug while using an app, dictate it on the spot, and forget about it. At home, Claude already has the ticket and works through it — without me opening an editor or typing a thing.",
+      "panels": [
+        { "title": "I use my app and spot a bug", "sub": "I'm testing it and something breaks." },
+        { "title": "I dictate an audio", "sub": "Nothing to open: I just explain the bug out loud." },
+        { "title": "It's saved as a ticket", "sub": "The audio goes to the cloud (triagebox) as a ticket." },
+        { "title": "Claude fixes it at home", "sub": "Next session it picks them up and acts one by one." }
+      ]
+    },
+    "example": {
+      "eyebrow": "A real example",
+      "title": "An audio instead of a forgotten note",
+      "body": "I'm testing an app on my phone and <strong>spot a bug</strong>. Instead of losing it, <strong>I dictate it</strong>: \"on the login screen, the Google button does nothing.\" By the time I get home, <strong>Claude Code already has the ticket</strong>, understands the problem, looks at the code and <strong>often leaves it fixed</strong>. The same works for a colleague reporting a bug with just an audio."
+    },
+    "design": {
+      "eyebrow": "Under the hood",
+      "title": "A pattern, not a closed product",
+      "items": [
+        { "title": "Generic and multi-tenant", "note": "Several apps share the same triagebox via apps.yml; each with its own space." },
+        { "title": "Scoped tokens", "note": "Separate capture / read / write permissions: whoever records can't read or act." },
+        { "title": "Private network", "note": "Runs on the private network (Tailscale); nothing exposed to the internet." },
+        { "title": "Local transcription", "note": "faster-whisper locally: the audio never leaves home." }
+      ]
+    },
+    "skill": {
+      "eyebrow": "The /tickets skill",
+      "title": "Packaged to drop into any repo",
+      "body": "That logic lives as a Claude Code skill (/tickets) you can copy into any project: it reads tickets via API, classifies them and decides what to do — with an explicit security note against prompt injection, because the content comes from third-party audio."
+    },
+    "honesty": {
+      "eyebrow": "Open-source",
+      "title": "My first public project",
+      "body": "triagebox is my first open-source repo: public and designed for anyone to run on their own stack. The code is on GitHub, ready for you to drop the skill and the microservice into your own project.",
+      "cta": "View the repo on GitHub"
+    },
+    "nav": {
+      "back": "← Duna",
+      "next": "Next: Cumple →"
+    }
+  },
+  "cumple": {
+    "meta": {
+      "title": "Cumple — A gift made with code · Èric Casanovas Pérez",
+      "description": "An interactive website handmade as a birthday gift for my partner: scenes, sound and confetti. Code made with care."
+    },
+    "back": "Projects",
+    "name": "Cumple",
+    "full": "A gift made with code",
+    "tagline": "An interactive website I made for my partner's birthday.",
+    "badges": [
+      { "label": "personal", "variant": "family" },
+      { "label": "work in progress", "variant": "standby" }
+    ],
+    "wip": {
+      "title": "Page under construction",
+      "body": "The real screenshots of this gift website are still missing. The structure and copy are done, but the images below are placeholders for now."
+    },
+    "concept": {
+      "stages": [
+        { "label": "An idea, with love", "icon": "idea" },
+        { "label": "Handmade website", "sub": "HTML, CSS & JS", "icon": "code" },
+        { "label": "Scenes, sound & confetti", "icon": "sparkles" },
+        { "label": "A gift for her", "icon": "heart" }
+      ]
+    },
+    "stats": [],
+    "story": {
+      "eyebrow": "The idea",
+      "title": "I also code for the people I love",
+      "body": "It's not all infrastructure and microservices. Some of the things I've most enjoyed making are for the people I love. This is an interactive website I made for my partner's birthday: it opens as a little experience, with scenes you move through one by one, sound and confetti. Handwritten HTML, CSS and JavaScript, no frameworks — just the wish to surprise her."
+    },
+    "gallery": {
+      "eyebrow": "Screenshots",
+      "title": "How it looks",
+      "items": [
+        { "caption": "The cover of the experience" },
+        { "caption": "One of the interactive scenes" },
+        { "caption": "The ending, with confetti" }
+      ]
+    },
+    "highlights": {
+      "eyebrow": "Details",
+      "title": "What I put inside",
+      "items": [
+        { "title": "Interactive scenes", "note": "The site moves through scenes that the person discovers one by one, at their own pace." },
+        { "title": "Typography with character", "note": "Fraunces + Inter to give it a warm, careful feel, far from generic." },
+        { "title": "Sound and confetti", "note": "Small animation and audio touches that make the moment feel special." },
+        { "title": "Pure HTML", "note": "Handmade, no frameworks: light, fast and easy to host anywhere." }
+      ]
+    },
+    "honesty": {
+      "eyebrow": "Personal",
+      "title": "Code made with care",
+      "body": "It's a small, personal project, but one of the ones I'm most excited to show: it shows I like to care about design and detail, and that coding also lets me make the people I love happy."
+    },
+    "nav": {
+      "back": "← triagebox",
+      "next": "All projects →"
+    }
+  }
+}

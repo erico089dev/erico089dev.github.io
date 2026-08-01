@@ -1,0 +1,215 @@
+---
+// Carrusel "coverflow" del flujo destacado de ACG: 3 escenas visibles a la vez — la central
+// grande y resaltada, y los pasos anterior/siguiente asomando atenuados a los lados. Auto-rota
+// y es navegable (flechas, puntos, swipe). Se pausa al interactuar o con el ratón encima, y
+// respeta prefers-reduced-motion (sin auto-rotación). Cada teléfono lo pinta <FlowReel scene>.
+// La leyenda es ÚNICA y va bajo el track (fuera, para que nunca se recorte) — la actualiza el JS.
+import FlowReel from './FlowReel.astro';
+
+interface Props {
+  flowName?: string;
+  frames: (string | null)[];
+  captions: string[];
+  labels?: { prev: string; next: string; stepWord: string };
+}
+const {
+  flowName = 'Reddit Video',
+  frames,
+  captions,
+  labels = { prev: 'Anterior', next: 'Siguiente', stepWord: 'Paso' },
+} = Astro.props;
+
+const n = frames.length;
+---
+
+<div class="cf" data-cf data-count={n} data-step-word={labels.stepWord} aria-roledescription="carrusel">
+  <div class="cf__stage">
+    <button class="cf__nav cf__nav--prev" data-cf-prev aria-label={labels.prev}>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <div class="cf__track" data-cf-track>
+      {
+        frames.map((_, i) => (
+          <figure class="cf__slide" data-cf-slide data-i={i} data-cap={captions[i]}>
+            <FlowReel flowName={flowName} scene={i} frames={frames} head={false} caption={false} />
+          </figure>
+        ))
+      }
+    </div>
+
+    <button class="cf__nav cf__nav--next" data-cf-next aria-label={labels.next}>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <p class="cf__caption">
+    <span class="cf__step mono" data-cf-step>{labels.stepWord} 1 / {n}</span>
+    <span class="cf__cap-txt" data-cf-caption>{captions[0]}</span>
+  </p>
+
+  <div class="cf__dots" data-cf-dots>
+    {frames.map((_, i) => (
+      <button class="cf__dot" data-cf-goto={i} aria-label={`${labels.stepWord} ${i + 1}`}></button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .cf {
+    /* Ancho de la escena central. Todo lo demás se deriva de aquí. */
+    --cw: clamp(210px, 22vw, 280px);
+    width: min(1120px, 92vw);
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-4);
+  }
+  .cf__stage {
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+  .cf__track {
+    position: relative;
+    grid-column: 2;
+    /* Altura = alto del teléfono central (marco 9:19.5), así la leyenda queda fuera. */
+    height: calc(var(--cw) * 19.5 / 9);
+    overflow: hidden;
+  }
+  .cf__slide {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: var(--cw);
+    margin: 0;
+    transform: translateX(-50%) scale(0.68);
+    opacity: 0;
+    pointer-events: none;
+    cursor: pointer;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.45s ease;
+    will-change: transform, opacity;
+  }
+  .cf__slide.is-center { transform: translateX(-50%) scale(1); opacity: 1; pointer-events: auto; z-index: 3; cursor: default; }
+  .cf__slide.is-prev { transform: translateX(calc(-50% - 42%)) scale(0.8); opacity: 0.38; z-index: 2; }
+  .cf__slide.is-next { transform: translateX(calc(-50% + 42%)) scale(0.8); opacity: 0.38; z-index: 2; }
+
+  .cf__slide :global(.reel) { max-width: 100%; }
+  .is-center :global(.reel__phone) {
+    box-shadow: 0 20px 50px -18px color-mix(in srgb, var(--family) 55%, transparent), var(--shadow);
+    border-color: color-mix(in srgb, var(--family) 45%, var(--border));
+  }
+
+  .cf__caption { text-align: center; max-width: 40ch; margin: 0; min-height: 3.2em; }
+  .cf__step { display: block; font-size: 0.7rem; color: var(--family); margin-bottom: var(--sp-1); }
+  .cf__cap-txt { font-size: var(--step-0); color: var(--text); line-height: 1.4; }
+
+  .cf__nav {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    z-index: 4;
+  }
+  .cf__nav:hover { color: var(--family); border-color: color-mix(in srgb, var(--family) 45%, var(--border)); }
+  .cf__nav--prev { grid-column: 1; }
+  .cf__nav--next { grid-column: 3; }
+
+  .cf__dots { display: flex; justify-content: center; gap: var(--sp-2); }
+  .cf__dot {
+    width: 22px; height: 4px; padding: 0;
+    border: none; border-radius: 999px;
+    background: var(--border-strong); opacity: 0.4;
+    cursor: pointer; transition: width 0.3s, opacity 0.3s, background 0.3s;
+  }
+  .cf__dot.is-on { background: var(--family); opacity: 1; width: 30px; }
+
+  @media (max-width: 620px) {
+    .cf { --cw: clamp(180px, 56vw, 240px); gap: var(--sp-3); }
+    .cf__nav { width: 34px; height: 34px; }
+    .cf__slide.is-prev { transform: translateX(calc(-50% - 56%)) scale(0.78); opacity: 0.22; }
+    .cf__slide.is-next { transform: translateX(calc(-50% + 56%)) scale(0.78); opacity: 0.22; }
+  }
+</style>
+
+<script>
+  function initCoverflow(root: HTMLElement) {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-cf-slide]'));
+    const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-cf-goto]'));
+    const capEl = root.querySelector<HTMLElement>('[data-cf-caption]');
+    const stepEl = root.querySelector<HTMLElement>('[data-cf-step]');
+    const stepWord = root.getAttribute('data-step-word') || 'Paso';
+    const n = slides.length;
+    if (!n) return;
+    let current = 0;
+    let timer: number | undefined;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function render() {
+      slides.forEach((s, i) => {
+        s.classList.remove('is-center', 'is-prev', 'is-next');
+        if (i === current) s.classList.add('is-center');
+        else if (i === (current - 1 + n) % n) s.classList.add('is-prev');
+        else if (i === (current + 1) % n) s.classList.add('is-next');
+      });
+      dots.forEach((d, i) => d.classList.toggle('is-on', i === current));
+      if (capEl) capEl.textContent = slides[current].getAttribute('data-cap') || '';
+      if (stepEl) stepEl.textContent = `${stepWord} ${current + 1} / ${n}`;
+    }
+    function go(to: number) { current = (to + n) % n; render(); }
+    function next() { go(current + 1); }
+    function prev() { go(current - 1); }
+
+    function startAuto() {
+      if (reduce) return;
+      stopAuto();
+      timer = window.setInterval(next, 4200);
+    }
+    function stopAuto() { if (timer) { clearInterval(timer); timer = undefined; } }
+    function bump() { stopAuto(); startAuto(); }
+
+    root.querySelector('[data-cf-next]')?.addEventListener('click', () => { next(); bump(); });
+    root.querySelector('[data-cf-prev]')?.addEventListener('click', () => { prev(); bump(); });
+    dots.forEach((d, i) => d.addEventListener('click', () => { go(i); bump(); }));
+    slides.forEach((s, i) => s.addEventListener('click', () => {
+      if (i !== current) { go(i); bump(); }
+    }));
+
+    root.addEventListener('mouseenter', stopAuto);
+    root.addEventListener('mouseleave', startAuto);
+    root.addEventListener('focusin', stopAuto);
+    root.addEventListener('focusout', startAuto);
+
+    const track = root.querySelector<HTMLElement>('[data-cf-track]');
+    let x0: number | null = null;
+    track?.addEventListener('pointerdown', (e) => { x0 = e.clientX; stopAuto(); });
+    track?.addEventListener('pointerup', (e) => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0;
+      if (Math.abs(dx) > 40) (dx < 0 ? next() : prev());
+      x0 = null; startAuto();
+    });
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        entries.forEach((en) => (en.isIntersecting ? startAuto() : stopAuto()));
+      }, { threshold: 0.25 }).observe(root);
+    }
+
+    render();
+    startAuto();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-cf]').forEach(initCoverflow);
+</script>

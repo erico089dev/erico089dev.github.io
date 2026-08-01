@@ -1,0 +1,120 @@
+---
+// Fondo de hero "showcase": va pasando los proyectos (nombre + qué hacen) en bucle,
+// grande, difuminado y en movimiento (crossfade + un ligero ken-burns), detrás del
+// texto del hero. Usa el color de familia de cada proyecto, así que el fondo es
+// multicolor por sí mismo y NO depende de una paleta única. CSS puro, sin JS.
+// Reutiliza la mecánica de crossfade de PhoneCarousel. Decorativo → aria-hidden.
+import { type Locale, useRawTranslations } from '../i18n/utils';
+
+interface Props {
+  locale?: Locale;
+}
+const { locale = 'es' } = Astro.props;
+const tRaw = useRawTranslations(locale);
+
+interface Project {
+  id: string;
+  family: 'acg' | 'duna' | 'inbox' | 'cumple';
+  name: string;
+  full: string;
+  tagline: string;
+}
+const projects = tRaw<Project[]>('projects.items', []);
+const count = projects.length || 1;
+---
+
+<div class="show" aria-hidden="true">
+  {
+    projects.map((p, i) => (
+      <div class="show__slide" data-family={p.family} style={`--i:${i}`}>
+        <span class="show__glow" />
+        <div class="show__text">
+          <span class="show__name">{p.name}</span>
+          <span class="show__full mono">{p.full}</span>
+          <span class="show__tag">{p.tagline}</span>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<style define:vars={{ count }}>
+  .show {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    /* Se difumina hacia la izquierda (donde va el texto del hero) y hacia abajo. */
+    mask-image: radial-gradient(120% 130% at 88% 30%, #000 20%, transparent 82%);
+  }
+  .show__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    animation: show-fade calc(var(--count) * 4.8s) ease-in-out infinite;
+    animation-delay: calc(var(--i) * -4.8s);
+  }
+  .show__slide[data-family='acg'] { --fam: var(--acg); }
+  .show__slide[data-family='duna'] { --fam: var(--duna); }
+  .show__slide[data-family='inbox'] { --fam: var(--inbox); }
+  .show__slide[data-family='cumple'] { --fam: var(--cumple); }
+
+  /* Halo de color de la familia, difuminado, en el lado derecho. */
+  .show__glow {
+    position: absolute;
+    right: -6rem;
+    top: 50%;
+    width: 44rem;
+    height: 44rem;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--fam), transparent 62%);
+    filter: blur(70px);
+    opacity: 0.4;
+  }
+  /* Texto del proyecto: grande, difuminado, a la derecha. */
+  .show__text {
+    position: absolute;
+    right: clamp(1.5rem, 6vw, 6rem);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--sp-2);
+    text-align: right;
+    max-width: 22ch;
+    filter: blur(2px);
+  }
+  .show__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    font-size: clamp(4rem, 13vw, 11rem);
+    color: var(--fam);
+    opacity: 0.28;
+  }
+  .show__full {
+    font-size: var(--step-1);
+    color: var(--fam);
+    opacity: 0.5;
+  }
+  .show__tag {
+    font-size: var(--step-2);
+    color: var(--text);
+    opacity: 0.32;
+    max-width: 20ch;
+  }
+  @keyframes show-fade {
+    0% { opacity: 0; transform: scale(1.06) translateX(2%); }
+    8% { opacity: 1; }
+    28% { opacity: 1; transform: scale(1) translateX(0); }
+    38% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .show__slide { animation: none; opacity: 0; transform: none; }
+    .show__slide:first-child { opacity: 1; }
+  }
+</style>

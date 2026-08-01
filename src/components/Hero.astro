@@ -1,0 +1,243 @@
+---
+import HeroSpotlight from './HeroSpotlight.astro';
+import type { Locale } from '../i18n/utils';
+
+interface Props {
+  kicker: string;
+  title: string;
+  subtitle: string;
+  ctaProjects: string;
+  ctaAbout: string;
+  stack?: string[];
+  locale?: Locale;
+  spotlightLabel?: string;
+}
+
+const {
+  kicker,
+  title,
+  subtitle,
+  ctaProjects,
+  ctaAbout,
+  stack = [],
+  locale = 'es',
+  spotlightLabel = 'Proyectos',
+} = Astro.props;
+---
+
+<section class="hero">
+  <div class="hero__glow" aria-hidden="true">
+    <span class="hero__blob hero__blob--a"></span>
+    <span class="hero__blob hero__blob--b"></span>
+  </div>
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <div class="hero__avatar" data-reveal title="Placeholder — aquí irá tu foto">
+        <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-label="Foto (placeholder)">
+          <circle cx="48" cy="38" r="15" class="av-fig" />
+          <path d="M24 88 C24 68 72 68 72 88 Z" class="av-fig" />
+        </svg>
+      </div>
+      <p class="eyebrow" data-reveal>{kicker}</p>
+      <h1 class="hero__title" data-reveal>{title}</h1>
+      <p class="hero__subtitle" data-reveal>{subtitle}</p>
+
+      <div class="hero__cta" data-reveal>
+        <a class="btn btn--primary" href="#proyectos">
+          {ctaProjects}
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+        <a class="btn btn--ghost" href="#sobre-mi">{ctaAbout}</a>
+      </div>
+    </div>
+
+    <div class="hero__spot" data-reveal>
+      <HeroSpotlight locale={locale} label={spotlightLabel} />
+    </div>
+  </div>
+</section>
+
+<script>
+  // Parallax con el puntero: fija --mx/--my en el hero (rango ~-0.5..0.5) para que el
+  // resplandor y el carrusel se muevan ligeramente con el ratón. Respeta reduced-motion.
+  const hero = document.querySelector('.hero');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (hero instanceof HTMLElement && !reduce.matches) {
+    let raf = 0;
+    hero.addEventListener('pointermove', (e) => {
+      const r = hero.getBoundingClientRect();
+      const mx = (e.clientX - r.left) / r.width - 0.5;
+      const my = (e.clientY - r.top) / r.height - 0.5;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        hero.style.setProperty('--mx', mx.toFixed(3));
+        hero.style.setProperty('--my', my.toFixed(3));
+      });
+    });
+    hero.addEventListener('pointerleave', () => {
+      hero.style.setProperty('--mx', '0');
+      hero.style.setProperty('--my', '0');
+    });
+  }
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  /* Resplandor ambiental de la paleta (dorado + azul): deriva solo + se mueve con el
+     ratón (--mx/--my los fija el script). Da vida y color sin recargar. */
+  .hero__glow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    transform: translate(calc(var(--mx, 0) * 18px), calc(var(--my, 0) * 18px));
+    transition: transform 0.5s ease-out;
+    /* Máscara que apaga el resplandor bastante antes de los bordes → al moverse con
+       el ratón nunca aparece un borde/línea recortada. */
+    mask-image: radial-gradient(80% 90% at 55% 22%, #000 32%, transparent 72%);
+  }
+  .hero__blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(64px);
+    opacity: 0.42;
+  }
+  .hero__blob--a {
+    width: 34rem;
+    height: 34rem;
+    left: 0;
+    top: -10%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 62%, transparent), transparent 66%);
+    animation: hero-blob-a 22s ease-in-out infinite;
+  }
+  .hero__blob--b {
+    width: 30rem;
+    height: 30rem;
+    right: 2%;
+    top: 4%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent-2, var(--accent)) 66%, transparent), transparent 66%);
+    animation: hero-blob-b 27s ease-in-out infinite;
+  }
+  @keyframes hero-blob-a {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(3.5rem, 2rem) scale(1.08); }
+  }
+  @keyframes hero-blob-b {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-3rem, 2.5rem) scale(0.92); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__glow { transform: none; }
+    .hero__blob { animation: none; }
+  }
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: start;
+    align-items: center;
+    gap: var(--sp-6);
+    padding-block: var(--sp-9) var(--sp-8);
+  }
+  .hero__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    max-width: 40rem;
+  }
+  /* Foto de presentación (placeholder de silueta; se sustituye por foto real). */
+  .hero__avatar {
+    width: 5.5rem;
+    height: 5.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--surface-2);
+    border: 2px solid var(--accent);
+    box-shadow: var(--shadow);
+  }
+  .hero__avatar svg { width: 100%; height: 100%; display: block; }
+  .av-fig { fill: color-mix(in srgb, var(--text) 34%, transparent); }
+  /* Entrada escalonada: los bloques del hero encadenan su reveal en vez de aparecer
+     en bloque. En reduced-motion el reveal global ya queda visible sin transición. */
+  .hero__text > [data-reveal]:nth-child(1) { transition-delay: 0s; }
+  .hero__text > [data-reveal]:nth-child(2) { transition-delay: 0.07s; }
+  .hero__text > [data-reveal]:nth-child(3) { transition-delay: 0.14s; }
+  .hero__text > [data-reveal]:nth-child(4) { transition-delay: 0.21s; }
+  .hero__text > [data-reveal]:nth-child(5) { transition-delay: 0.28s; }
+  .hero__spot[data-reveal] { transition-delay: 0.22s; }
+  .hero__spot { width: 100%; }
+  .hero__title {
+    font-size: var(--step-6);
+    max-width: 16ch;
+  }
+  .hero__subtitle {
+    font-size: var(--step-1);
+    font-weight: 450;
+    color: var(--text-muted);
+    max-width: 54ch;
+  }
+  .hero__stack {
+    margin-top: var(--sp-1);
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    margin-top: var(--sp-3);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: 0.8rem 1.4rem;
+    border-radius: var(--r-md);
+    font-weight: 600;
+    font-size: var(--step-1);
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: transform 0.15s var(--ease), background-color 0.2s var(--ease),
+      border-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+  .btn:hover svg {
+    transform: translateX(3px);
+  }
+  .btn svg {
+    transition: transform 0.18s var(--ease);
+  }
+  .btn--primary {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .btn--primary:hover {
+    background: color-mix(in srgb, var(--accent) 88%, #000);
+  }
+  /* Botón secundario RELLENO en azul (color secundario de la paleta). */
+  .btn--ghost {
+    background: var(--accent-2, var(--accent));
+    color: var(--accent-2-ink, var(--accent-ink));
+    border-color: transparent;
+  }
+  .btn--ghost:hover {
+    background: color-mix(in srgb, var(--accent-2, var(--accent)) 86%, #000);
+  }
+  @media (min-width: 860px) {
+    .hero__inner {
+      grid-template-columns: 1fr minmax(0, 26rem);
+      gap: var(--sp-8);
+      padding-block: var(--sp-10) var(--sp-9);
+    }
+    .hero__spot {
+      justify-self: end;
+    }
+  }
+</style>

@@ -1,0 +1,443 @@
+/* ============================================================================
+   Tokens — Portfolio Èric Casanovas Pérez
+   Dirección: "Old money". Tan dorado + azul polvo, neutros crema suaves.
+   Paleta ÚNICA (ya no hay eje `data-palette`): Old money se hornea en la base.
+   Tema a nivel de token: :root (light base) → @media dark → [data-theme] override.
+   Los componentes SIEMPRE usan var(--token), nunca colores dentro del media query.
+   ============================================================================ */
+
+:root {
+  /* --- Tipografía --- */
+  --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Escala de tipo (modular ~1.25, fluida con clamp) */
+  --step--1: 0.833rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: clamp(1.4rem, 1.25rem + 0.6vw, 1.563rem);
+  --step-3: clamp(1.65rem, 1.4rem + 1vw, 1.953rem);
+  --step-4: clamp(2rem, 1.6rem + 1.7vw, 2.441rem);
+  --step-5: clamp(2.4rem, 1.9rem + 2.4vw, 3.052rem);
+  --step-6: clamp(2.9rem, 2.1rem + 3.6vw, 3.815rem);
+
+  /* --- Espaciado --- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+
+  /* --- Radios --- */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-pill: 999px;
+
+  /* --- Layout --- */
+  --maxw: 1120px;
+  --pad-x: clamp(1rem, 0.5rem + 3vw, 2.5rem);
+
+  /* --- Transiciones --- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 0.5s;
+
+  /* ===== Color — Old money LIGHT (crema cálida, tan dorado, azul polvo) =====
+     Nivel "Cálido": un pelín más crema que el neutro pero sin llegar al beige fuerte.
+     --tint es el arena de paneles/mockups del carrusel: cálido pero sin oscurecer. */
+  --bg: #f0ebe0;
+  --surface: #f8f5ec;
+  --surface-2: #e6dcc9;
+  --border: rgba(58, 56, 52, 0.12);
+  --border-strong: rgba(58, 56, 52, 0.24);
+  --text: #33322e;
+  --text-muted: #7c7970;
+  --accent: #ab8654;
+  --accent-2: #8299ac;
+  --accent-ink: #ffffff;
+  --accent-2-ink: #21303a;
+  --accent-soft: rgba(171, 134, 84, 0.13);
+  --tint: #ddd0b8;
+
+  /* Semántico (≠ acento) */
+  --ok: #2f7d46;
+  --standby: #8a8378;
+  --shadow: 0 1px 2px rgba(58, 56, 52, 0.05), 0 8px 24px rgba(58, 56, 52, 0.08);
+
+  /* Familias por proyecto (light) */
+  --acg: #6d3fce;
+  --duna: #12897a;
+  --inbox: #1b74c9;
+  --cumple: #c2456f;
+
+  /* Familia activa del deep-dive (por defecto = acento). Se sobreescribe por página. */
+  --family: var(--accent);
+  --family-soft: var(--accent-soft);
+
+  color-scheme: light;
+}
+
+/* Tokens Old money DARK — se comparten entre el @media (SO oscuro) y el toggle.
+   Aplican salvo en Duna (que se retema entero más abajo). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-family='duna']) {
+    --bg: #201d17;
+    --surface: #2a251d;
+    --surface-2: #372f24;
+    --border: rgba(245, 243, 239, 0.13);
+    --border-strong: rgba(245, 243, 239, 0.26);
+    --text: #f5f3ef;
+    --text-muted: #a3b5c4;
+    --accent: #c9a56a;
+    --accent-2: #a3b5c4;
+    --accent-ink: #22221e;
+    --accent-2-ink: #21303a;
+    --accent-soft: rgba(201, 165, 106, 0.16);
+    --tint: #3a3128;
+    --ok: #3f9d5a;
+    --standby: #8a8378;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.42);
+    --acg: #a06bff;
+    --duna: #34c9b5;
+    --inbox: #38bdf8;
+    --cumple: #ff6f9c;
+    color-scheme: dark;
+  }
+}
+
+/* ===== Override por toggle (gana sobre el SO en ambos sentidos) ===== */
+:root[data-theme='dark']:not([data-family='duna']) {
+  --bg: #201d17;
+  --surface: #2a251d;
+  --surface-2: #372f24;
+  --border: rgba(245, 243, 239, 0.13);
+  --border-strong: rgba(245, 243, 239, 0.26);
+  --text: #f5f3ef;
+  --text-muted: #a3b5c4;
+  --accent: #c9a56a;
+  --accent-2: #a3b5c4;
+  --accent-ink: #22221e;
+  --accent-2-ink: #21303a;
+  --accent-soft: rgba(201, 165, 106, 0.16);
+  --tint: #3a3128;
+  --ok: #3f9d5a;
+  --standby: #8a8378;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.42);
+  --acg: #a06bff;
+  --duna: #34c9b5;
+  --inbox: #38bdf8;
+  --cumple: #ff6f9c;
+  color-scheme: dark;
+}
+
+:root[data-theme='light']:not([data-family='duna']) {
+  --bg: #f0ebe0;
+  --surface: #f8f5ec;
+  --surface-2: #e6dcc9;
+  --border: rgba(58, 56, 52, 0.12);
+  --border-strong: rgba(58, 56, 52, 0.24);
+  --text: #33322e;
+  --text-muted: #7c7970;
+  --accent: #ab8654;
+  --accent-2: #8299ac;
+  --accent-ink: #ffffff;
+  --accent-2-ink: #21303a;
+  --accent-soft: rgba(171, 134, 84, 0.13);
+  --tint: #ddd0b8;
+  --ok: #2f7d46;
+  --standby: #8a8378;
+  --shadow: 0 1px 2px rgba(58, 56, 52, 0.05), 0 8px 24px rgba(58, 56, 52, 0.08);
+  --acg: #6d3fce;
+  --duna: #12897a;
+  --inbox: #1b74c9;
+  --cumple: #c2456f;
+  color-scheme: light;
+}
+
+/* Utilidades de familia por proyecto (se aplica en <body data-family="acg"> etc.).
+   ACG e inbox tienen su propio retema completo más abajo (no usan este atajo). */
+:root[data-family='cumple'] { --family: var(--cumple); --family-soft: color-mix(in srgb, var(--cumple) 14%, transparent); }
+
+/* Duna no usa la paleta old-money: su color secundario y su tinte derivan de su propio
+   acento/superficie (así el retema "desierto" no hereda el azul polvo ni el arena crema). */
+:root[data-family='duna'] { --accent-2: var(--accent); --accent-2-ink: var(--accent-ink); --tint: var(--surface-2); }
+
+/* ============================================================================
+   Duna — retema completo a "desierto" (solo activo en /duna, vía data-family).
+   Paleta calcada del icono: crema → melocotón → arena → terracota.
+   No toca --duna (el swatch teal de la home sigue igual en ProjectCard).
+   ============================================================================ */
+:root[data-family='duna'] {
+  --family: #b0602c;
+  --family-soft: rgba(176, 96, 44, 0.14);
+  --bg: #f2e0b8;
+  --surface: #f9edd0;
+  --surface-2: #e8cf9c;
+  --border: #d9b877;
+  --border-strong: #c0964f;
+  --text: #3a2917;
+  --text-muted: #856942;
+  --accent: #b0602c;
+  --accent-ink: #fffaf1;
+  --accent-soft: rgba(176, 96, 44, 0.14);
+  --shadow: 0 1px 2px rgba(58, 41, 23, 0.08), 0 8px 24px rgba(58, 41, 23, 0.1);
+  --duna-sky: #f7e2b8;
+  --duna-dune-1: #f3d8a0;
+  --duna-dune-2: #e8bd7a;
+  --duna-dune-3: #d29652;
+  --duna-dune-4: #b06b2a;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-family='duna'] {
+    --family: #e2954f;
+    --family-soft: rgba(226, 149, 79, 0.16);
+    --bg: #241a0f;
+    --surface: #2e2115;
+    --surface-2: #3c2c1a;
+    --border: #52402a;
+    --border-strong: #6b5333;
+    --text: #f3e6d1;
+    --text-muted: #c2a67d;
+    --accent: #e2954f;
+    --accent-ink: #201810;
+    --accent-soft: rgba(226, 149, 79, 0.16);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.45);
+    --duna-sky: #2a1d10;
+    --duna-dune-1: #3a2b19;
+    --duna-dune-2: #4f3820;
+    --duna-dune-3: #6e4b28;
+    --duna-dune-4: #a5692f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='light'][data-family='duna'] {
+  --family: #b0602c;
+  --family-soft: rgba(176, 96, 44, 0.14);
+  --bg: #f2e0b8;
+  --surface: #f9edd0;
+  --surface-2: #e8cf9c;
+  --border: #d9b877;
+  --border-strong: #c0964f;
+  --text: #3a2917;
+  --text-muted: #856942;
+  --accent: #b0602c;
+  --accent-ink: #fffaf1;
+  --accent-soft: rgba(176, 96, 44, 0.14);
+  --shadow: 0 1px 2px rgba(58, 41, 23, 0.08), 0 8px 24px rgba(58, 41, 23, 0.1);
+  --duna-sky: #f7e2b8;
+  --duna-dune-1: #f3d8a0;
+  --duna-dune-2: #e8bd7a;
+  --duna-dune-3: #d29652;
+  --duna-dune-4: #b06b2a;
+  color-scheme: light;
+}
+:root[data-theme='dark'][data-family='duna'] {
+  --family: #e2954f;
+  --family-soft: rgba(226, 149, 79, 0.16);
+  --bg: #241a0f;
+  --surface: #2e2115;
+  --surface-2: #3c2c1a;
+  --border: #52402a;
+  --border-strong: #6b5333;
+  --text: #f3e6d1;
+  --text-muted: #c2a67d;
+  --accent: #e2954f;
+  --accent-ink: #201810;
+  --accent-soft: rgba(226, 149, 79, 0.16);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.45);
+  --duna-sky: #2a1d10;
+  --duna-dune-1: #3a2b19;
+  --duna-dune-2: #4f3820;
+  --duna-dune-3: #6e4b28;
+  --duna-dune-4: #a5692f;
+  color-scheme: dark;
+}
+
+/* ============================================================================
+   ACG — retema completo "Óxido coral" (solo activo en /acg, vía data-family).
+   Paleta dada por Èric: crema cálida + coral de marca, con arena y oliva de apoyo.
+   accent-2 (oliva/tertiary) sustituye al verde antiguo para el rol de "segunda
+   categoría" que ya usaba FlowReel (marcador del paso B). accent-ink/accent-2-ink
+   son siempre --bg (texto oscuro/claro según tema), nunca blanco/negro puro, tal
+   como pide la guía de la paleta. surface-2/border-strong no vienen en la paleta
+   dada: se derivan de surface/border/text con color-mix para mantener el mismo
+   paso tonal que el resto de familias.
+   ============================================================================ */
+:root[data-family='acg'] { --tint: var(--surface-2); }
+
+:root[data-family='acg'] {
+  --family: #c15442;
+  --family-soft: color-mix(in srgb, var(--family) 14%, transparent);
+  --bg: #fbf6f1;
+  --surface: #ffffff;
+  --surface-2: color-mix(in srgb, var(--surface) 55%, var(--border) 45%);
+  --border: #e7dccf;
+  --border-strong: color-mix(in srgb, var(--border) 55%, var(--text) 45%);
+  --text: #2e241c;
+  --text-muted: #6e5d4e;
+  --accent: #c15442;
+  --accent-ink: var(--bg);
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --accent-2: #7a8a4e;
+  --accent-2-ink: var(--bg);
+  --shadow: 0 1px 2px rgba(46, 36, 28, 0.08), 0 8px 24px rgba(46, 36, 28, 0.1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-family='acg'] {
+    --family: #e08066;
+    --family-soft: color-mix(in srgb, var(--family) 16%, transparent);
+    /* Carbón neutro (sin apenas tinte) + coral de acento, que sube de luminosidad
+       en oscuro para seguir resaltando limpio. */
+    --bg: #1a1a18;
+    --surface: #232320;
+    --surface-2: color-mix(in srgb, var(--surface) 55%, var(--border) 45%);
+    --border: #33332e;
+    --border-strong: color-mix(in srgb, var(--border) 55%, var(--text) 45%);
+    --text: #f0ede7;
+    --text-muted: #b0a99e;
+    --accent: #e08066;
+    --accent-ink: var(--bg);
+    --accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+    --accent-2: #9fb06a;
+    --accent-2-ink: var(--bg);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.45);
+    color-scheme: dark;
+  }
+}
+
+/* ============================================================================
+   inbox — retema completo "Índigo escalonado" (solo activo en /inbox, vía data-family).
+   Dirección: SaaS · foco · profesional. Elegida por Èric sobre capturas (escala A +
+   toques dorados de C). Clave frente a la 1ª versión (que salía plana): los neutros
+   llevan un tinte índigo frío y las capas bg → surface → surface-2 están MÁS
+   separadas (valores explícitos, no color-mix), para que se noten los escalones y
+   el oscuro no sea negro plano. FONDO con presencia real (elegido por Èric sobre
+   capturas). AMBOS modos son la MISMA familia azul (se alinearon a mano para que no
+   desentonen): CLARO fondo azul cielo #D4E2F1 + acento azul #1B74C9; OSCURO fondo
+   azul marino profundo #0D1524 + acento cian cielo #38BDF8 (misma tinta, distinta
+   luminosidad). El contenido va en surface (blanco / marino #16203A) que resalta
+   contra el fondo. Dorado #D99830 → #E6AD4A como contrapunto cálido en botón
+   secundario (badge) y algún stat.
+   ============================================================================ */
+:root[data-family='inbox'] { --tint: var(--surface-2); }
+
+:root[data-family='inbox'] {
+  --family: #1b74c9;
+  --family-soft: color-mix(in srgb, var(--family) 15%, transparent);
+  --bg: #d4e2f1;
+  --surface: #ffffff;
+  --surface-2: #c6d8eb;
+  --border: #d5e1ef;
+  --border-strong: #b4c7dd;
+  --text: #16202c;
+  --text-muted: #5b6a7a;
+  --accent: #1b74c9;
+  --accent-ink: #ffffff;
+  --accent-soft: color-mix(in srgb, var(--accent) 15%, transparent);
+  --accent-2: #d99830;
+  --accent-2-ink: #ffffff;
+  --shadow: 0 1px 2px rgba(20, 32, 46, 0.06), 0 14px 34px rgba(27, 116, 201, 0.16);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-family='inbox'] {
+    --family: #38bdf8;
+    --family-soft: color-mix(in srgb, var(--family) 22%, transparent);
+    --bg: #0d1524;
+    --surface: #16203a;
+    --surface-2: #20304d;
+    --border: #2c3a56;
+    --border-strong: #41506e;
+    --text: #eef1f9;
+    --text-muted: #9fa6bc;
+    --accent: #38bdf8;
+    --accent-ink: #06131c;
+    --accent-soft: color-mix(in srgb, var(--accent) 22%, transparent);
+    --accent-2: #e6ad4a;
+    --accent-2-ink: #0d1524;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.55), 0 16px 38px rgba(0, 0, 0, 0.6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme='light'][data-family='inbox'] {
+  --family: #1b74c9;
+  --family-soft: color-mix(in srgb, var(--family) 15%, transparent);
+  --bg: #d4e2f1;
+  --surface: #ffffff;
+  --surface-2: #c6d8eb;
+  --border: #d5e1ef;
+  --border-strong: #b4c7dd;
+  --text: #16202c;
+  --text-muted: #5b6a7a;
+  --accent: #1b74c9;
+  --accent-ink: #ffffff;
+  --accent-soft: color-mix(in srgb, var(--accent) 15%, transparent);
+  --accent-2: #d99830;
+  --accent-2-ink: #ffffff;
+  --shadow: 0 1px 2px rgba(20, 32, 46, 0.06), 0 14px 34px rgba(27, 116, 201, 0.16);
+  color-scheme: light;
+}
+:root[data-theme='dark'][data-family='inbox'] {
+  --family: #38bdf8;
+  --family-soft: color-mix(in srgb, var(--family) 22%, transparent);
+  --bg: #0d1524;
+  --surface: #16203a;
+  --surface-2: #20304d;
+  --border: #2c3a56;
+  --border-strong: #41506e;
+  --text: #eef1f9;
+  --text-muted: #9fa6bc;
+  --accent: #38bdf8;
+  --accent-ink: #06131c;
+  --accent-soft: color-mix(in srgb, var(--accent) 22%, transparent);
+  --accent-2: #e6ad4a;
+  --accent-2-ink: #0d1524;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.55), 0 16px 38px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+:root[data-theme='light'][data-family='acg'] {
+  --family: #c15442;
+  --family-soft: color-mix(in srgb, var(--family) 14%, transparent);
+  --bg: #fbf6f1;
+  --surface: #ffffff;
+  --surface-2: color-mix(in srgb, var(--surface) 55%, var(--border) 45%);
+  --border: #e7dccf;
+  --border-strong: color-mix(in srgb, var(--border) 55%, var(--text) 45%);
+  --text: #2e241c;
+  --text-muted: #6e5d4e;
+  --accent: #c15442;
+  --accent-ink: var(--bg);
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --accent-2: #7a8a4e;
+  --accent-2-ink: var(--bg);
+  --shadow: 0 1px 2px rgba(46, 36, 28, 0.08), 0 8px 24px rgba(46, 36, 28, 0.1);
+  color-scheme: light;
+}
+:root[data-theme='dark'][data-family='acg'] {
+  --family: #e08066;
+  --family-soft: color-mix(in srgb, var(--family) 16%, transparent);
+  /* Carbón neutro (sin apenas tinte) + coral de acento, que sube de luminosidad
+     en oscuro para seguir resaltando limpio. */
+  --bg: #1a1a18;
+  --surface: #232320;
+  --surface-2: color-mix(in srgb, var(--surface) 55%, var(--border) 45%);
+  --border: #33332e;
+  --border-strong: color-mix(in srgb, var(--border) 55%, var(--text) 45%);
+  --text: #f0ede7;
+  --text-muted: #b0a99e;
+  --accent: #e08066;
+  --accent-ink: var(--bg);
+  --accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+  --accent-2: #9fb06a;
+  --accent-2-ink: var(--bg);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
+}

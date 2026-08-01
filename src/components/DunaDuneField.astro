@@ -1,0 +1,132 @@
+---
+// Fondo ambiental del hero de Duna: dunas ilustradas (SVG propio), difuminadas y en
+// bucle lento (CSS puro, sin JS). Cinco variantes de la misma silueta que se van
+// cruzando, para que el fondo "viva" sin depender de fotos. Colores desde los
+// tokens --duna-dune-*/--duna-sky (ver tokens.css), así que se retema solo con el tema.
+const variants: string[][] = [
+  [
+    'M0 210 C 220 150, 380 260, 620 200 C 860 140, 1000 230, 1200 190 L1200 520 L0 520 Z',
+    'M0 290 C 260 240, 420 340, 680 280 C 900 230, 1040 310, 1200 270 L1200 520 L0 520 Z',
+    'M0 370 C 240 330, 460 410, 700 360 C 920 320, 1060 390, 1200 350 L1200 520 L0 520 Z',
+    'M0 440 C 280 410, 500 470, 760 430 C 960 400, 1080 450, 1200 420 L1200 520 L0 520 Z',
+  ],
+  [
+    'M0 250 C 200 300, 420 180, 640 230 C 860 280, 1020 190, 1200 220 L1200 520 L0 520 Z',
+    'M0 320 C 220 360, 460 260, 680 300 C 900 340, 1040 270, 1200 290 L1200 520 L0 520 Z',
+    'M0 380 C 260 410, 480 340, 720 370 C 940 400, 1080 350, 1200 360 L1200 520 L0 520 Z',
+    'M0 440 C 300 460, 520 420, 760 440 C 970 460, 1090 430, 1200 435 L1200 520 L0 520 Z',
+  ],
+  [
+    'M0 180 C 260 240, 440 140, 660 190 C 880 240, 1020 150, 1200 180 L1200 520 L0 520 Z',
+    'M0 270 C 240 310, 460 230, 700 270 C 920 300, 1060 240, 1200 260 L1200 520 L0 520 Z',
+    'M0 360 C 250 390, 470 330, 710 355 C 930 380, 1070 335, 1200 345 L1200 520 L0 520 Z',
+    'M0 430 C 270 445, 500 410, 740 425 C 950 440, 1080 415, 1200 420 L1200 520 L0 520 Z',
+  ],
+  [
+    'M0 230 C 300 170, 500 260, 750 210 C 950 170, 1050 240, 1200 200 L1200 520 L0 520 Z',
+    'M0 300 C 280 260, 520 330, 760 290 C 960 260, 1060 310, 1200 280 L1200 520 L0 520 Z',
+    'M0 370 C 260 340, 500 400, 740 365 C 940 335, 1070 385, 1200 355 L1200 520 L0 520 Z',
+    'M0 435 C 300 415, 540 460, 780 430 C 970 405, 1080 445, 1200 425 L1200 520 L0 520 Z',
+  ],
+  [
+    'M0 160 C 240 220, 420 120, 680 170 C 900 210, 1040 130, 1200 165 L1200 520 L0 520 Z',
+    'M0 260 C 230 300, 450 220, 700 260 C 930 295, 1050 225, 1200 250 L1200 520 L0 520 Z',
+    'M0 350 C 240 380, 470 320, 710 350 C 940 375, 1070 330, 1200 340 L1200 520 L0 520 Z',
+    'M0 425 C 260 440, 500 405, 730 425 C 950 445, 1080 415, 1200 420 L1200 520 L0 520 Z',
+  ],
+];
+---
+
+<div class="dunes" aria-hidden="true">
+  <div class="dunes__drift">
+    {
+      variants.map((paths, i) => (
+        <svg
+          class="dunes__layer"
+          style={`--i:${i}`}
+          viewBox="0 0 1200 520"
+          preserveAspectRatio="xMidYMax slice"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect width="1200" height="520" fill="var(--duna-sky)" />
+          <path d={paths[0]} class="dunes__band dunes__band--1" />
+          <path d={paths[1]} class="dunes__band dunes__band--2" />
+          <path d={paths[2]} class="dunes__band dunes__band--3" />
+          <path d={paths[3]} class="dunes__band dunes__band--4" />
+        </svg>
+      ))
+    }
+  </div>
+  <div class="dunes__scrim"></div>
+</div>
+
+<style define:vars={{ count: variants.length }}>
+  .dunes {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  /* Deriva: mueve TODAS las capas juntas como un solo bloque, para que nunca se
+     desalineen entre sí (eso producía el "bloque" visible). Bastante más ancha que
+     el contenedor para tener margen de sobra y no dejar huecos al moverse tanto. */
+  .dunes__drift {
+    position: absolute;
+    inset: -4% -18%;
+    width: 136%;
+    height: 108%;
+    animation: dunes-drift 10s ease-in-out infinite;
+  }
+  .dunes__layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: blur(6px) saturate(1.15);
+    opacity: 0;
+    animation: dunes-fade calc(var(--count) * 6s) ease-in-out infinite;
+    animation-delay: calc(var(--i) * -6s);
+  }
+  @keyframes dunes-fade {
+    0% { opacity: 0; }
+    8% { opacity: 1; }
+    30% { opacity: 1; }
+    40% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+  @keyframes dunes-drift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-10%, 1.6%); }
+  }
+  .dunes__band--1 { fill: var(--duna-dune-1); }
+  .dunes__band--2 { fill: var(--duna-dune-2); }
+  .dunes__band--3 { fill: var(--duna-dune-3); }
+  .dunes__band--4 { fill: var(--duna-dune-4); }
+  .dunes__scrim {
+    position: absolute;
+    inset: 0;
+    /* Termina en --bg (no en --surface): la banda de la sección siguiente se funde
+       ELLA sola desde --bg (su ::before difumina surface desde transparente). Así el
+       desierto → bg → surface es un degradado continuo, sin el "valle" de color que
+       aparecía al saltar surface(hero) → bg(feather) → surface(banda). */
+    background:
+      linear-gradient(to bottom,
+        color-mix(in srgb, var(--bg) 8%, transparent) 0%,
+        color-mix(in srgb, var(--bg) 30%, transparent) 55%,
+        var(--bg) 100%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dunes__drift {
+      animation: none;
+    }
+    .dunes__layer {
+      animation: none;
+      opacity: 0;
+    }
+    .dunes__layer:first-child {
+      opacity: 1;
+    }
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+interface GalleryItem {
+  caption: string;
+  src?: string;
+  alt?: string;
+}
+interface Props {
+  items: GalleryItem[];
+  /** 'portrait' = mockups verticales de móvil (ancho contenido, no estirados). */
+  orientation?: 'landscape' | 'portrait';
+}
+
+const { items, orientation = 'landscape' } = Astro.props;
+---
+
+<div class:list={['gallery', orientation === 'portrait' && 'gallery--portrait']}>
+  {
+    items.map((item) => (
+      <figure class="shot">
+        {item.src ? (
+          <img class="shot__img" src={item.src} alt={item.alt ?? item.caption} loading="lazy" />
+        ) : (
+          <div class="shot__ph" role="img" aria-label={`${item.caption} — captura pendiente`}>
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="16" rx="2" />
+              <circle cx="9" cy="10" r="2" />
+              <path d="M3 17l5-4 4 3 3-2 6 5" />
+            </svg>
+            <span class="shot__ph-tag mono">captura pendiente</span>
+          </div>
+        )}
+        <figcaption class="shot__cap">{item.caption}</figcaption>
+      </figure>
+    ))
+  }
+</div>
+
+<style>
+  .gallery {
+    display: grid;
+    gap: var(--sp-4);
+  }
+  @media (min-width: 720px) {
+    .gallery {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  /* Mockups verticales: teléfonos con ancho contenido, centrados, no estirados. */
+  .gallery--portrait {
+    justify-content: center;
+    gap: var(--sp-5);
+  }
+  @media (min-width: 560px) {
+    .gallery--portrait {
+      grid-template-columns: repeat(3, minmax(0, 340px));
+      gap: var(--sp-6);
+    }
+  }
+  .shot {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .shot__img {
+    width: 100%;
+    border-radius: var(--r-md);
+    border: 1px solid var(--border);
+  }
+  .gallery--portrait .shot__img {
+    border-radius: var(--r-lg);
+  }
+  .shot__ph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    aspect-ratio: 16 / 10;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--family) 5%, var(--surface));
+    color: var(--text-muted);
+  }
+  .gallery--portrait .shot__ph {
+    aspect-ratio: 9 / 19.5;
+    border-radius: var(--r-lg);
+  }
+  .shot__ph-tag {
+    font-size: 0.7rem;
+  }
+  .shot__cap {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+  .gallery--portrait .shot__cap {
+    font-size: var(--step-0);
+    text-align: center;
+  }
+</style>

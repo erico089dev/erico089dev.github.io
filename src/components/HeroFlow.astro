@@ -1,0 +1,87 @@
+---
+// OPCIÓN C — Flujo de pipeline vivo. Curvas (pipelines) con "pulsos" de datos que
+// fluyen a lo largo, hechos con stroke-dasharray + dashoffset animado (CSS puro, sin
+// JS). Evoca los pipelines de IA/automatización de Èric; abstracto y escala infinito.
+// Colores cálidos desde tokens. Decorativo → aria-hidden.
+const W = 1200;
+const H = 620;
+
+// Curvas de pipeline (sangran por los lados para que no se vea el inicio/fin).
+const curves = [
+  'M-60,130 C 300,40 620,210 900,130 C 1080,80 1200,150 1320,120',
+  'M-60,300 C 260,220 560,380 860,300 C 1080,240 1220,340 1320,300',
+  'M-60,470 C 320,560 640,380 940,470 C 1120,530 1240,430 1320,470',
+  'M-60,215 C 340,150 700,300 1040,215 C 1180,180 1280,240 1320,215',
+];
+// Nodos estáticos sobre las curvas, para textura (no animados).
+const nodes = [
+  { x: 300, y: 92 },
+  { x: 860, y: 132 },
+  { x: 560, y: 330 },
+  { x: 940, y: 470 },
+  { x: 1040, y: 213 },
+];
+---
+
+<div class="flow" aria-hidden="true">
+  <svg
+    class="flow__svg"
+    viewBox={`0 0 ${W} ${H}`}
+    preserveAspectRatio="xMidYMid slice"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {curves.map((d) => <path class="flow__track" d={d} />)}
+    {
+      curves.map((d, i) => (
+        <path class="flow__stream" style={`--i:${i}`} d={d} />
+      ))
+    }
+    {nodes.map((n) => <circle class="flow__node" cx={n.x} cy={n.y} r="3.5" />)}
+  </svg>
+</div>
+
+<style>
+  .flow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    mask-image: radial-gradient(130% 120% at 55% 25%, #000 45%, transparent 92%);
+  }
+  .flow__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .flow__track {
+    fill: none;
+    stroke: var(--border-strong);
+    stroke-width: 1.5;
+    opacity: 0.28;
+    vector-effect: non-scaling-stroke;
+  }
+  /* Pulsos de datos: guiones cortos que corren por la curva. */
+  .flow__stream {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    opacity: 0.7;
+    stroke-linecap: round;
+    stroke-dasharray: 4 46;
+    vector-effect: non-scaling-stroke;
+    animation: flow-run 3.2s linear infinite;
+    animation-delay: calc(var(--i) * -0.8s);
+  }
+  .flow__node {
+    fill: var(--accent);
+    opacity: 0.55;
+  }
+  @keyframes flow-run {
+    to { stroke-dashoffset: -50; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .flow__stream { animation: none; opacity: 0.4; }
+  }
+</style>

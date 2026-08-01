@@ -1,0 +1,305 @@
+---
+// "Mini-vídeo" de un flujo de ACG: escenas ilustradas (SVG inline) que se cruzan en
+// bucle dentro de un marco de móvil — mismo truco crossfade que PhoneCarousel/DunaDuneField,
+// cero JS. Cuenta el viaje del flujo (aquí: Reddit Video) para que se VEA, no solo se lea.
+// Los frames reales del vídeo se podrán sustituir aquí más adelante (slot de imagen por escena).
+interface Props {
+  flowName?: string;
+  automation?: 'auto' | 'semi';
+  sec?: number; // segundos por escena
+  scene?: number; // si se da, renderiza SOLO esa escena estática (para posters/capturas)
+  frames?: (string | null | undefined)[]; // frame REAL por escena (imagen); si falta, cae a la ilustración SVG
+  head?: boolean; // muestra la cabecera (nombre + badge); false para tiras de varias escenas
+  caption?: boolean; // muestra el pie de foto por escena; false si lo gestiona el contenedor
+}
+const { flowName = 'Reddit Video', automation = 'auto', sec = 3.2, scene, frames, head = true, caption = true } = Astro.props;
+
+// Cada escena: SVG interno (hijos de <svg viewBox="0 0 300 650">) + pie de foto.
+const SCENES: { svg: string; cap: string }[] = [
+  {
+    cap: 'Entra en Reddit y detecta un hilo que está petando',
+    svg: `
+      <rect width="300" height="650" fill="var(--bg)" />
+      <g fill="var(--text-muted)" opacity="0.5"><rect x="24" y="26" width="34" height="5" rx="2.5" /><circle cx="270" cy="28" r="4" /></g>
+      <circle cx="40" cy="78" r="14" fill="#ff4500" /><circle cx="40" cy="78" r="5" fill="#fff" />
+      <rect x="62" y="70" width="96" height="8" rx="4" fill="var(--text)" />
+      <rect x="62" y="84" width="60" height="6" rx="3" fill="var(--text-muted)" opacity="0.6" />
+      <rect x="20" y="116" width="260" height="152" rx="14" fill="var(--surface)" stroke="var(--border)" />
+      <rect x="36" y="134" width="46" height="16" rx="8" fill="#ff4500" opacity="0.14" />
+      <path d="M52 138 l4 -5 l4 5 z" fill="#ff4500" /><rect x="60" y="140" width="16" height="4" rx="2" fill="#ff4500" />
+      <rect x="36" y="166" width="220" height="9" rx="4.5" fill="var(--text)" />
+      <rect x="36" y="182" width="200" height="9" rx="4.5" fill="var(--text)" />
+      <rect x="36" y="198" width="150" height="9" rx="4.5" fill="var(--text-muted)" opacity="0.6" />
+      <g transform="translate(36 226)">
+        <path d="M8 0 l8 -9 l8 9 z" fill="var(--family)" /><rect x="0" y="12" width="34" height="7" rx="3.5" fill="var(--family)" />
+        <rect x="70" y="4" width="16" height="14" rx="3" fill="none" stroke="var(--text-muted)" opacity="0.6" />
+        <rect x="94" y="8" width="30" height="7" rx="3.5" fill="var(--text-muted)" opacity="0.6" />
+      </g>
+      <g opacity="0.85">
+        <rect x="20" y="296" width="260" height="48" rx="10" fill="var(--surface)" stroke="var(--border)" />
+        <circle cx="40" cy="320" r="9" fill="var(--surface-2)" />
+        <rect x="58" y="310" width="150" height="6" rx="3" fill="var(--text-muted)" opacity="0.7" />
+        <rect x="58" y="324" width="110" height="6" rx="3" fill="var(--text-muted)" opacity="0.45" />
+        <rect x="20" y="356" width="260" height="48" rx="10" fill="var(--surface)" stroke="var(--border)" />
+        <circle cx="40" cy="380" r="9" fill="var(--surface-2)" />
+        <rect x="58" y="370" width="120" height="6" rx="3" fill="var(--text-muted)" opacity="0.7" />
+        <rect x="58" y="384" width="160" height="6" rx="3" fill="var(--text-muted)" opacity="0.45" />
+      </g>
+      <text x="150" y="452" text-anchor="middle" font-family="var(--font-mono)" font-size="14" fill="var(--family)">🔥 hilo caliente</text>`,
+  },
+  {
+    cap: 'Extrae los comentarios: datos, debate, acuerdos y rechazos',
+    svg: `
+      <rect width="300" height="650" fill="var(--bg)" />
+      <text x="24" y="48" font-family="var(--font-mono)" font-size="12" fill="var(--text-muted)">procesando comentarios…</text>
+      <g font-family="var(--font-mono)" font-size="9">
+        <rect x="20" y="66" width="260" height="52" rx="10" fill="var(--surface)" stroke="var(--border)" />
+        <rect x="34" y="80" width="150" height="6" rx="3" fill="var(--text)" opacity="0.8" /><rect x="34" y="94" width="110" height="6" rx="3" fill="var(--text-muted)" opacity="0.5" />
+        <rect x="200" y="78" width="64" height="16" rx="8" fill="var(--family)" opacity="0.16" /><text x="232" y="90" text-anchor="middle" fill="var(--family)">dato</text>
+        <rect x="20" y="128" width="260" height="52" rx="10" fill="var(--surface)" stroke="var(--border)" />
+        <rect x="34" y="142" width="170" height="6" rx="3" fill="var(--text)" opacity="0.8" /><rect x="34" y="156" width="90" height="6" rx="3" fill="var(--text-muted)" opacity="0.5" />
+        <rect x="196" y="140" width="68" height="16" rx="8" fill="var(--ok)" opacity="0.18" /><text x="230" y="152" text-anchor="middle" fill="var(--ok)">acuerdo</text>
+        <rect x="20" y="190" width="260" height="52" rx="10" fill="var(--surface)" stroke="var(--border)" />
+        <rect x="34" y="204" width="140" height="6" rx="3" fill="var(--text)" opacity="0.8" /><rect x="34" y="218" width="120" height="6" rx="3" fill="var(--text-muted)" opacity="0.5" />
+        <rect x="196" y="202" width="68" height="16" rx="8" fill="#e0574e" opacity="0.18" /><text x="230" y="214" text-anchor="middle" fill="#e0574e">rechazo</text>
+        <rect x="20" y="252" width="260" height="52" rx="10" fill="var(--surface)" stroke="var(--border)" />
+        <rect x="34" y="266" width="160" height="6" rx="3" fill="var(--text)" opacity="0.8" /><rect x="34" y="280" width="100" height="6" rx="3" fill="var(--text-muted)" opacity="0.5" />
+        <rect x="198" y="264" width="66" height="16" rx="8" fill="var(--accent-2)" opacity="0.22" /><text x="231" y="276" text-anchor="middle" fill="var(--accent-2)">debate</text>
+      </g>
+      <path d="M120 328 h60 l-18 22 v18 h-24 v-18 z" fill="var(--family)" opacity="0.85" />
+      <text x="150" y="398" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">→ señal filtrada</text>`,
+  },
+  {
+    cap: 'Refina todo y lo convierte en un guion con diálogo',
+    svg: `
+      <rect width="300" height="650" fill="var(--bg)" />
+      <rect x="20" y="44" width="260" height="316" rx="14" fill="var(--surface)" stroke="var(--border)" />
+      <text x="36" y="72" font-family="var(--font-mono)" font-size="11" fill="var(--family)">GUION</text>
+      <rect x="222" y="58" width="46" height="18" rx="9" fill="var(--family)" opacity="0.16" /><text x="245" y="71" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--family)">IA ✦</text>
+      <circle cx="42" cy="110" r="11" fill="var(--family)" opacity="0.85" /><text x="42" y="114" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--accent-ink)">A</text>
+      <rect x="62" y="100" width="196" height="34" rx="10" fill="var(--surface-2)" /><rect x="74" y="110" width="160" height="6" rx="3" fill="var(--text)" opacity="0.8" /><rect x="74" y="122" width="120" height="6" rx="3" fill="var(--text-muted)" opacity="0.5" />
+      <circle cx="258" cy="168" r="11" fill="var(--accent-2)" /><text x="258" y="172" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--accent-2-ink)">B</text>
+      <rect x="42" y="158" width="196" height="34" rx="10" fill="var(--surface-2)" /><rect x="54" y="168" width="150" height="6" rx="3" fill="var(--text)" opacity="0.8" /><rect x="54" y="180" width="100" height="6" rx="3" fill="var(--text-muted)" opacity="0.5" />
+      <circle cx="42" cy="226" r="11" fill="var(--family)" opacity="0.85" /><text x="42" y="230" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--accent-ink)">A</text>
+      <rect x="62" y="216" width="196" height="34" rx="10" fill="var(--surface-2)" /><rect x="74" y="226" width="170" height="6" rx="3" fill="var(--text)" opacity="0.8" /><rect x="74" y="238" width="90" height="6" rx="3" fill="var(--text-muted)" opacity="0.5" />
+      <rect x="36" y="278" width="140" height="7" rx="3.5" fill="var(--text-muted)" opacity="0.45" />
+      <rect x="36" y="294" width="200" height="7" rx="3.5" fill="var(--text-muted)" opacity="0.45" />
+      <rect x="36" y="310" width="120" height="7" rx="3.5" fill="var(--text-muted)" opacity="0.45" />
+      <rect x="36" y="328" width="6" height="14" rx="2" fill="var(--family)"><animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite" /></rect>`,
+  },
+  {
+    cap: 'Monta el vídeo: fondo, personaje, subtítulos y voz clonada',
+    svg: `
+      <defs><linearGradient id="reel-vid" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--family)" stop-opacity="0.35" /><stop offset="1" stop-color="var(--accent-2)" stop-opacity="0.28" /></linearGradient></defs>
+      <rect width="300" height="650" fill="var(--bg)" />
+      <rect x="22" y="44" width="256" height="330" rx="16" fill="url(#reel-vid)" stroke="var(--border)" />
+      <g transform="translate(150 186)">
+        <ellipse cx="0" cy="78" rx="60" ry="48" fill="var(--surface)" opacity="0.85" />
+        <circle cx="0" cy="0" r="42" fill="#f2c791" /><ellipse cx="0" cy="32" rx="23" ry="17" fill="#f2c791" />
+        <circle cx="-15" cy="-4" r="10" fill="#fff" /><circle cx="-13" cy="-4" r="4.5" fill="#2a2a2a" />
+        <circle cx="15" cy="-4" r="10" fill="#fff" /><circle cx="13" cy="-4" r="4.5" fill="#2a2a2a" />
+        <path d="M-15 24 q15 13 30 0" fill="none" stroke="#b9773f" stroke-width="3" stroke-linecap="round" />
+      </g>
+      <rect x="50" y="316" width="200" height="36" rx="8" fill="rgba(0,0,0,0.55)" />
+      <text x="150" y="340" text-anchor="middle" font-family="var(--font-display)" font-weight="700" font-size="15" fill="#fff">así funciona, tío</text>
+      <g fill="var(--family)">
+        <rect x="34" y="410" width="5" height="14" rx="2.5"><animate attributeName="height" values="14;30;14" dur="0.9s" repeatCount="indefinite" /><animate attributeName="y" values="410;402;410" dur="0.9s" repeatCount="indefinite" /></rect>
+        <rect x="46" y="402" width="5" height="30" rx="2.5"><animate attributeName="height" values="30;12;30" dur="0.8s" repeatCount="indefinite" /><animate attributeName="y" values="402;411;402" dur="0.8s" repeatCount="indefinite" /></rect>
+        <rect x="58" y="406" width="5" height="22" rx="2.5"><animate attributeName="height" values="22;34;22" dur="1s" repeatCount="indefinite" /><animate attributeName="y" values="406;398;406" dur="1s" repeatCount="indefinite" /></rect>
+        <rect x="70" y="414" width="5" height="10" rx="2.5"><animate attributeName="height" values="10;26;10" dur="0.7s" repeatCount="indefinite" /><animate attributeName="y" values="414;404;414" dur="0.7s" repeatCount="indefinite" /></rect>
+        <rect x="82" y="404" width="5" height="26" rx="2.5"><animate attributeName="height" values="26;14;26" dur="0.85s" repeatCount="indefinite" /><animate attributeName="y" values="404;410;404" dur="0.85s" repeatCount="indefinite" /></rect>
+      </g>
+      <text x="160" y="424" font-family="var(--font-mono)" font-size="10" fill="var(--text-muted)">voz clonada · XTTS v2</text>
+      <rect x="34" y="450" width="232" height="6" rx="3" fill="var(--surface-2)" /><rect x="34" y="450" width="150" height="6" rx="3" fill="var(--family)" />
+      <circle cx="184" cy="453" r="7" fill="var(--family)" stroke="var(--surface)" stroke-width="2" />`,
+  },
+  {
+    cap: 'Y se publica solo — Instagram, TikTok y YouTube',
+    svg: `
+      <defs><linearGradient id="reel-done" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--family)" stop-opacity="0.5" /><stop offset="1" stop-color="var(--accent-2)" stop-opacity="0.4" /></linearGradient></defs>
+      <rect width="300" height="650" fill="var(--bg)" />
+      <rect x="116" y="34" width="68" height="120" rx="12" fill="url(#reel-done)" stroke="var(--border)" />
+      <circle cx="150" cy="94" r="17" fill="rgba(255,255,255,0.88)" /><path d="M144 85 l11 9 l-11 9 z" fill="var(--family)" />
+      <rect x="128" y="130" width="44" height="14" rx="7" fill="rgba(0,0,0,0.45)" /><text x="150" y="140" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="#fff">Reel</text>
+      <text x="150" y="176" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">vídeo listo → se publica en</text>
+      <g font-family="var(--font-display)" font-weight="600" font-size="14">
+        <g transform="translate(0 200)">
+          <rect x="20" y="0" width="260" height="58" rx="13" fill="var(--surface)" stroke="var(--border)" />
+          <g transform="translate(36 16) scale(1.15)"><rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="#e1306c" stroke-width="1.9" /><circle cx="12" cy="12" r="4.3" fill="none" stroke="#e1306c" stroke-width="1.9" /><circle cx="17.2" cy="6.8" r="1.25" fill="#e1306c" /></g>
+          <text x="80" y="27" fill="var(--text)">Instagram</text><text x="80" y="45" font-family="var(--font-mono)" font-weight="400" font-size="10" fill="var(--text-muted)">Reel · @erico089dev</text>
+          <rect x="196" y="17" width="68" height="24" rx="12" fill="var(--ok)" opacity="0.16" /><path d="M208 29 l4 4 l8 -9" fill="none" stroke="var(--ok)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /><text x="228" y="33" font-family="var(--font-mono)" font-weight="400" font-size="10" fill="var(--ok)">listo</text>
+        </g>
+        <g transform="translate(0 268)">
+          <rect x="20" y="0" width="260" height="58" rx="13" fill="var(--surface)" stroke="var(--border)" />
+          <g transform="translate(36 16) scale(1.15)"><path d="M13.2 3 h2.9 c0.4 2.5 2 4.2 4.4 4.5 v3 c-1.7 0.05 -3.2 -0.45 -4.4 -1.3 v6.1 a5.6 5.6 0 1 1 -5.6 -5.6 c0.33 0 0.66 0.03 0.98 0.08 v3.1 a2.55 2.55 0 1 0 1.72 2.4 z" fill="var(--text)" /></g>
+          <text x="80" y="27" fill="var(--text)">TikTok</text><text x="80" y="45" font-family="var(--font-mono)" font-weight="400" font-size="10" fill="var(--text-muted)">vídeo vertical + caption</text>
+          <rect x="196" y="17" width="68" height="24" rx="12" fill="var(--ok)" opacity="0.16" /><path d="M208 29 l4 4 l8 -9" fill="none" stroke="var(--ok)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /><text x="228" y="33" font-family="var(--font-mono)" font-weight="400" font-size="10" fill="var(--ok)">listo</text>
+        </g>
+        <g transform="translate(0 336)">
+          <rect x="20" y="0" width="260" height="58" rx="13" fill="var(--surface)" stroke="var(--border)" />
+          <g transform="translate(36 19) scale(1.15)"><rect x="1.5" y="6" width="21" height="12" rx="3.6" fill="#ff0033" /><path d="M10 9.2 L15 12 L10 14.8 Z" fill="#fff" /></g>
+          <text x="80" y="27" fill="var(--text)">YouTube</text><text x="80" y="45" font-family="var(--font-mono)" font-weight="400" font-size="10" fill="var(--text-muted)">Short + descripción + miniatura</text>
+          <rect x="196" y="17" width="68" height="24" rx="12" fill="var(--ok)" opacity="0.16" /><path d="M208 29 l4 4 l8 -9" fill="none" stroke="var(--ok)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /><text x="228" y="33" font-family="var(--font-mono)" font-weight="400" font-size="10" fill="var(--ok)">listo</text>
+        </g>
+      </g>
+      <text x="150" y="452" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--family)">✦ sin tocar nada</text>`,
+  },
+];
+
+const single = typeof scene === 'number';
+const shown = single ? [SCENES[scene]] : SCENES;
+---
+
+<figure class:list={['reel', single && 'reel--static']} style={`--count:${SCENES.length}; --sec:${sec}`}>
+  {head && (
+    <figcaption class="reel__head">
+      <span class="reel__name">{flowName}</span>
+      <span class:list={['reel__badge', `reel__badge--${automation}`]}>
+        {automation === 'auto' ? 'Automático' : 'Semiautomático'}
+      </span>
+    </figcaption>
+  )}
+
+  <div class="reel__phone">
+    <span class="reel__notch"></span>
+    {
+      shown.map((s, i) => {
+        const realIdx = single ? (scene as number) : i;
+        const img = frames?.[realIdx];
+        return (
+          <div class="reel__slide" style={`--i:${single ? 0 : i}`}>
+            {img ? (
+              <img class="scene scene--real" src={img} alt={s.cap} loading="lazy" />
+            ) : (
+              <svg viewBox="0 0 300 650" class="scene" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" set:html={s.svg} />
+            )}
+          </div>
+        );
+      })
+    }
+  </div>
+
+  {!single && (
+    <div class="reel__dots">
+      {SCENES.map((_, i) => <span class="reel__dot" style={`--i:${i}`}></span>)}
+    </div>
+  )}
+  {caption && (
+    <div class="reel__caps">
+      {shown.map((s, i) => <span class="reel__cap" style={`--i:${single ? 0 : i}`}>{s.cap}</span>)}
+    </div>
+  )}
+</figure>
+
+<style>
+  .reel {
+    width: 100%;
+    max-width: 300px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .reel__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+  }
+  .reel__name { font-family: var(--font-display); font-size: var(--step-1); font-weight: 600; }
+  .reel__badge {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--r-pill);
+    border: 1px solid transparent;
+  }
+  .reel__badge--auto {
+    color: var(--ok);
+    background: color-mix(in srgb, var(--ok) 14%, transparent);
+    border-color: color-mix(in srgb, var(--ok) 30%, transparent);
+  }
+  .reel__badge--semi {
+    color: var(--family);
+    background: var(--family-soft);
+    border-color: color-mix(in srgb, var(--family) 30%, transparent);
+  }
+
+  .reel__phone {
+    position: relative;
+    aspect-ratio: 9 / 19.5;
+    border-radius: 26px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .reel__notch {
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 34%; height: 6px;
+    border-radius: 999px;
+    background: var(--border-strong);
+    opacity: 0.5; z-index: 3;
+  }
+  .reel__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    animation: reel-fade calc(var(--count) * var(--sec) * 1s) ease-in-out infinite;
+    animation-delay: calc(var(--i) * var(--sec) * -1s);
+  }
+  .reel__slide:first-child { opacity: 1; }
+  .reel--static .reel__slide { animation: none; opacity: 1; }
+  .scene { display: block; width: 100%; height: 100%; }
+  .scene--real { object-fit: cover; }
+
+  @keyframes reel-fade {
+    0% { opacity: 0; }
+    5% { opacity: 1; }
+    18% { opacity: 1; }
+    23% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  .reel__dots { display: flex; justify-content: center; gap: var(--sp-2); }
+  .reel__dot {
+    width: 20px; height: 4px;
+    border-radius: 999px;
+    background: var(--border-strong);
+    opacity: 0.4;
+    position: relative;
+    overflow: hidden;
+  }
+  .reel__dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--family);
+    opacity: 0;
+    animation: reel-fade calc(var(--count) * var(--sec) * 1s) ease-in-out infinite;
+    animation-delay: calc(var(--i) * var(--sec) * -1s);
+  }
+  .reel__dot:first-child::after { opacity: 1; }
+
+  .reel__caps { position: relative; min-height: 3em; }
+  .reel__cap {
+    position: absolute;
+    inset: 0;
+    text-align: center;
+    font-size: var(--step-0);
+    color: var(--text-muted);
+    line-height: 1.4;
+    opacity: 0;
+    animation: reel-fade calc(var(--count) * var(--sec) * 1s) ease-in-out infinite;
+    animation-delay: calc(var(--i) * var(--sec) * -1s);
+  }
+  .reel__cap:first-child { opacity: 1; }
+  .reel--static .reel__cap { animation: none; opacity: 1; position: static; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reel__slide, .reel__cap, .reel__dot::after { animation: none; opacity: 0; }
+    .reel__slide:first-child, .reel__cap:first-child, .reel__dot:first-child::after { opacity: 1; }
+  }
+</style>

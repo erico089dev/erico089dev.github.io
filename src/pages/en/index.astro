@@ -1,0 +1,414 @@
+---
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import Base from '../../layouts/Base.astro';
+import Section from '../../components/Section.astro';
+import Hero from '../../components/Hero.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import FeaturedProjectCard from '../../components/FeaturedProjectCard.astro';
+import { getLocaleFromUrl, useTranslations, useRawTranslations } from '../../i18n/utils';
+
+type Variant = 'ok' | 'standby' | 'private' | 'accent' | 'family';
+interface BadgeItem { label: string; variant?: Variant }
+interface Role { id: string; label: string; desc: string }
+interface Stat { value: string; label: string }
+interface Project {
+  id: string;
+  family: 'acg' | 'duna' | 'inbox' | 'cumple';
+  icon?: string;
+  name: string;
+  full: string;
+  tagline: string;
+  href: string;
+  stack: string[];
+  badges: BadgeItem[];
+  platforms?: string[];
+  platformsLabel?: string;
+  /** Solo el proyecto estrella (ACG): copy y datos extra de la tarjeta grande. */
+  flag?: string;
+  emphasis?: string;
+  stats?: Stat[];
+}
+
+const locale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(locale);
+const tRaw = useRawTranslations(locale);
+
+const heroStack = tRaw<string[]>('hero.stack', []);
+const projects = tRaw<Project[]>('projects.items', []);
+// ACG = proyecto estrella (tarjeta grande); el resto va en la rejilla de "otros".
+const featured = projects.find((p) => p.id === 'acg');
+const rest = projects.filter((p) => p.id !== 'acg');
+
+// Sobre mí
+const company = tRaw<string[]>('about.company', []);
+const primary = tRaw<Role[]>('about.primary', []);
+const support = tRaw<Role[]>('about.support', []);
+const sw = tRaw<string[]>('about.sw', []);
+const aiSkills = tRaw<string[]>('about.ai', []);
+const cvHref = `/cv/eric-casanovas-cv-${locale}.pdf`;
+// El CV real aún no está subido (ver public/cv/README.md). En vez de enlazar a un
+// PDF que da 404, se comprueba en build-time si el archivo ya existe: mientras no
+// esté, el botón se muestra desactivado; en cuanto Èric lo suba, aparece solo.
+const cvReady = existsSync(fileURLToPath(new URL(`../../../public${cvHref}`, import.meta.url)));
+
+// Iconos inline (self-hosted) para el esquema "¿Qué hace Èric?".
+const roleIcon: Record<string, string> = {
+  api: '<rect x="4" y="4" width="16" height="5" rx="1.5"/><rect x="4" y="12" width="16" height="5" rx="1.5"/><path d="M8 6.5h.01M8 14.5h.01"/>',
+  ui: '<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18"/>',
+  ai: '<path d="M12 3l1.6 3.9L18 8.5l-3.9 1.6L12 14l-1.6-3.9L6 8.5l4.4-1.6z"/>',
+  arch: '<path d="M12 3l8 5-8 5-8-5 8-5z"/><path d="M4 13l8 5 8-5"/>',
+  deploy: '<path d="M12 3c3 2 5 5 5 9l-5 3-5-3c0-4 2-7 5-9z"/><circle cx="12" cy="9" r="1.6"/><path d="M9 17l-2 4M15 17l2 4"/>',
+  bridge: '<circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="12" r="2.5"/><path d="M8.5 12h7"/>',
+  solution: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.6 1 1.4 1 2.5h6c0-1.1.3-1.9 1-2.5A6 6 0 0 0 12 3z"/>',
+};
+const swIcon = '<path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"/>';
+const aiIcon = '<path d="M12 3l1.6 3.9L18 8.5l-3.9 1.6L12 14l-1.6-3.9L6 8.5l4.4-1.6z"/>';
+---
+
+<Base title={t('meta.title')} description={t('meta.description')}>
+  <Hero
+    kicker={t('hero.kicker')}
+    title={t('hero.title')}
+    subtitle={t('hero.subtitle')}
+    ctaProjects={t('hero.ctaProjects')}
+    ctaAbout={t('hero.ctaAbout')}
+    stack={heroStack}
+    locale={locale}
+    spotlightLabel={t('projects.eyebrow')}
+  />
+
+  <Section id="proyectos" band="surface" eyebrow={t('projects.eyebrow')} title={t('projects.title')}>
+    <p class="projects__note" data-reveal>{t('projects.note')}</p>
+
+    {featured && (
+      <Fragment>
+        <p class="projects__group eyebrow" data-reveal>{t('projects.starEyebrow')}</p>
+        <FeaturedProjectCard
+          name={featured.name}
+          full={featured.full}
+          tagline={featured.tagline}
+          emphasis={featured.emphasis ?? ''}
+          href={featured.href}
+          family={featured.family}
+          flagLabel={featured.flag ?? ''}
+          stack={featured.stack}
+          stats={featured.stats ?? []}
+          badges={featured.badges}
+          cta={t('projects.cta')}
+          platforms={featured.platforms}
+          platformsLabel={featured.platformsLabel}
+          layout="banner"
+          colorBy="tone"
+          tone="primary"
+        />
+      </Fragment>
+    )}
+
+    <p class="projects__group projects__group--mt eyebrow" data-reveal>{t('projects.othersEyebrow')}</p>
+    <div class="projects">
+      {
+        rest.map((p) => (
+          <ProjectCard
+            name={p.name}
+            full={p.full}
+            tagline={p.tagline}
+            href={p.href}
+            family={p.family}
+            icon={p.icon}
+            stack={p.stack}
+            badges={p.badges}
+            platforms={p.platforms}
+            platformsLabel={p.platformsLabel}
+            cta={t('projects.cta')}
+            colorBy="tone"
+            tone="secondary"
+          />
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section id="sobre-mi" band="bg" eyebrow={t('about.eyebrow')} title={t('about.title')}>
+    <div class="about">
+      <div class="about__prose" data-reveal>
+        <p class="about__label mono">{t('about.companyLabel')}</p>
+        {company.map((p) => <p class="about__p">{p}</p>)}
+        <p class="about__label mono">{t('about.personalLabel')}</p>
+        <p class="about__p">{t('about.personal')}</p>
+      </div>
+
+      <aside class="about__side" data-reveal>
+        <div class="strength">
+          <span class="strength__k mono">{t('about.strengthLabel')}</span>
+          <p class="strength__t">{t('about.strength')}</p>
+        </div>
+        <div class="cv">
+          <span class="cv__note">{t('about.cvNote')}</span>
+          {cvReady ? (
+            <a class="cv__btn" href={cvHref} download>
+              {t('about.cvCta')}
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" /></svg>
+            </a>
+          ) : (
+            <span class="cv__btn cv__btn--soon" aria-disabled="true" title={t('about.cvSoonHint')}>
+              {t('about.cvSoonCta')}
+            </span>
+          )}
+        </div>
+      </aside>
+    </div>
+
+    <div class="doing" data-reveal>
+      <p class="doing__eyebrow mono">{t('about.doingEyebrow')}</p>
+      <p class="doing__grp">{t('about.moreLabel')}</p>
+      <div class="roles">
+        {primary.map((r) => (
+          <div class="role role--hot">
+            <svg class="role__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={roleIcon[r.id]} />
+            <span class="role__label">{r.label}</span>
+            <span class="role__desc">{r.desc}</span>
+          </div>
+        ))}
+      </div>
+      <p class="doing__grp doing__grp--muted">{t('about.supportLabel')}</p>
+      <div class="roles">
+        {support.map((r) => (
+          <div class="role role--soft">
+            <svg class="role__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={roleIcon[r.id]} />
+            <span class="role__label">{r.label}</span>
+            <span class="role__desc">{r.desc}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="skills" data-reveal>
+      <div class="skills__grp">
+        <span class="skills__lbl mono">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={swIcon} />
+          {t('about.swLabel')}
+        </span>
+        <ul class="chips">{sw.map((s) => <li class="chip">{s}</li>)}</ul>
+      </div>
+      <div class="skills__grp">
+        <span class="skills__lbl skills__lbl--ai mono">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={aiIcon} />
+          {t('about.aiLabel')}
+        </span>
+        <ul class="chips">{aiSkills.map((s) => <li class="chip chip--ai">{s}</li>)}</ul>
+      </div>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  /* Proyectos */
+  .projects__note {
+    color: var(--text-muted);
+    font-weight: 450;
+    max-width: 60ch;
+    margin-bottom: var(--sp-6);
+  }
+  /* Rótulos de grupo ("Proyecto estrella" / "Otros proyectos") de la sección. */
+  .projects__group {
+    margin-bottom: var(--sp-4);
+  }
+  .projects__group--mt {
+    margin-top: var(--sp-7);
+  }
+  .projects {
+    display: grid;
+    gap: var(--sp-4);
+  }
+  @media (min-width: 620px) {
+    .projects {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 900px) {
+    .projects {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .projects > :nth-child(1) { transition-delay: 0s; }
+  .projects > :nth-child(2) { transition-delay: 0.08s; }
+  .projects > :nth-child(3) { transition-delay: 0.16s; }
+
+  /* ===== Sobre mí ===== */
+  .about {
+    display: grid;
+    gap: var(--sp-6);
+  }
+  @media (min-width: 860px) {
+    .about {
+      grid-template-columns: 1.4fr 1fr;
+      align-items: start;
+      gap: var(--sp-8);
+    }
+  }
+  .about__prose {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .about__label {
+    color: var(--accent);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: var(--sp-3);
+  }
+  .about__prose > .about__label:first-child { margin-top: 0; }
+  .about__p {
+    color: var(--text);
+    font-weight: 450;
+    max-width: 60ch;
+  }
+
+  .about__side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+  .strength {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    padding: var(--sp-4) var(--sp-5);
+    border-radius: 0 var(--r-md) var(--r-md) 0;
+  }
+  .strength__k {
+    color: var(--accent);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .strength__t {
+    margin-top: 0.35rem;
+    font-weight: 500;
+    max-width: none;
+  }
+  .cv {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+  .cv__note {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    max-width: none;
+  }
+  .cv__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--r-md);
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: background-color 0.2s var(--ease), transform 0.15s var(--ease);
+  }
+  .cv__btn:hover { background: color-mix(in srgb, var(--accent) 88%, #000); transform: translateY(-1px); }
+  /* Aún sin PDF real subido: mismo hueco, look claramente inactivo (sin color de marca). */
+  .cv__btn--soon {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px dashed var(--border-strong);
+    cursor: not-allowed;
+  }
+
+  /* ---- Esquema "¿Qué hace Èric?" ---- */
+  .doing {
+    margin-top: var(--sp-8);
+    padding-top: var(--sp-6);
+    border-top: 1px solid var(--border);
+  }
+  .doing__eyebrow {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: var(--sp-4);
+  }
+  .doing__grp {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-1);
+    margin-bottom: var(--sp-3);
+  }
+  .doing__grp--muted {
+    color: var(--text-muted);
+    margin-top: var(--sp-5);
+  }
+  .roles {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+  @media (min-width: 520px) {
+    /* auto-fill + minmax → tarjetas de ancho uniforme, alineadas a la izquierda
+       (4 en "lo que más hago", 2 en "en apoyo") sin filas huérfanas descuadradas. */
+    .roles { grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+  }
+  .role {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: var(--sp-4) var(--sp-4);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    background: var(--surface);
+  }
+  .role__ico { width: 1.35rem; height: 1.35rem; margin-bottom: 0.25rem; color: var(--text-muted); }
+  .role__label { font-weight: 650; font-size: 0.95rem; }
+  .role__desc { color: var(--text-muted); font-size: 0.8rem; }
+  .role--hot {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  }
+  .role--hot .role__ico { color: var(--accent); }
+  .role--soft { opacity: 0.92; }
+  .role--soft .role__label { font-weight: 550; }
+
+  /* ---- Skills ---- */
+  .skills {
+    margin-top: var(--sp-7);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-5);
+  }
+  .skills__lbl {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: var(--sp-3);
+  }
+  .skills__lbl--ai { color: var(--accent-2); }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); list-style: none; padding: 0; }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    font-weight: 600;
+    padding: 0.32rem 0.68rem;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+  }
+  .chip--ai {
+    background: color-mix(in srgb, var(--accent-2) 15%, var(--surface));
+    border-color: color-mix(in srgb, var(--accent-2) 45%, var(--border));
+  }
+</style>

@@ -1,0 +1,158 @@
+---
+import Badge from './Badge.astro';
+
+interface BadgeItem {
+  label: string;
+  variant?: 'ok' | 'standby' | 'private' | 'accent' | 'family' | 'gold';
+}
+interface Props {
+  name: string;
+  full: string;
+  tagline: string;
+  subLine?: string;
+  badges?: BadgeItem[];
+  backLabel: string;
+  backHref: string;
+  icon?: string;
+  iconAlt?: string;
+}
+
+const { name, full, tagline, subLine, badges = [], backLabel, backHref, icon, iconAlt } = Astro.props;
+const hasVisual = Astro.slots.has('visual');
+const hasCustomBg = Astro.slots.has('bg');
+---
+
+<header class="phero">
+  {hasCustomBg ? <slot name="bg" /> : <div class="phero__bg" aria-hidden="true"></div>}
+  <div class:list={['container', 'phero__inner', hasVisual && 'phero__inner--split']}>
+    <div class="phero__text">
+      <a class="phero__back mono" href={backHref} data-reveal>← {backLabel}</a>
+
+      <div class="phero__id" data-reveal>
+        {icon && <img class="phero__icon" src={icon} alt={iconAlt ?? ''} width="64" height="64" />}
+        <div class="phero__id-text">
+          <h1 class="phero__name">{name}</h1>
+          <p class="phero__full mono">{full}</p>
+        </div>
+      </div>
+
+      <p class="phero__tagline" data-reveal>{tagline}</p>
+      {subLine && <p class="phero__subline" data-reveal>{subLine}</p>}
+
+      {
+        badges.length > 0 && (
+          <div class="phero__badges" data-reveal>
+            {badges.map((b) => (
+              <Badge variant={b.variant}>{b.label}</Badge>
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    {
+      hasVisual && (
+        <div class="phero__visual" data-reveal>
+          <slot name="visual" />
+        </div>
+      )
+    }
+  </div>
+</header>
+
+<style>
+  .phero {
+    position: relative;
+    overflow: hidden;
+  }
+  .phero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      radial-gradient(70% 65% at 85% 0%, color-mix(in srgb, var(--family) 14%, transparent), transparent 70%),
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+    background-size: 100% 100%, 44px 44px, 44px 44px;
+    opacity: 0.4;
+    mask-image: radial-gradient(120% 100% at 70% 0%, #000 30%, transparent 90%);
+  }
+  .phero__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
+    padding-block: var(--sp-7) var(--sp-8);
+  }
+  @media (min-width: 900px) {
+    .phero__inner--split {
+      grid-template-columns: 1fr 0.92fr;
+      align-items: center;
+      gap: var(--sp-8);
+    }
+  }
+  .phero__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    min-width: 0;
+  }
+  .phero__back {
+    align-self: flex-start;
+    font-size: var(--step--1);
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .phero__back:hover {
+    color: var(--family);
+  }
+  .phero__id {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+  }
+  .phero__id-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    min-width: 0;
+  }
+  .phero__icon {
+    width: 4rem;
+    height: 4rem;
+    flex-shrink: 0;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .phero__name {
+    font-size: var(--step-5);
+    line-height: 1;
+  }
+  .phero__full {
+    font-size: var(--step-0);
+    color: var(--text-muted);
+  }
+  .phero__tagline {
+    font-size: var(--step-2);
+    color: var(--text);
+    max-width: 34ch;
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .phero__subline {
+    font-size: var(--step-0);
+    color: var(--text-muted);
+    max-width: 42ch;
+  }
+  .phero__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .phero__visual {
+    min-width: 0;
+  }
+</style>

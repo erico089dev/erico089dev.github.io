@@ -1,0 +1,143 @@
+---
+// Carrusel de capturas de móvil (crossfade CSS puro, sin JS): mismo truco de
+// animación en bucle que DunaDuneField, aplicado a fotos reales en vez de fondo.
+// Todas las capturas están en el DOM a la vez (accesibles), solo cambia la opacidad.
+interface ShotItem {
+  src?: string;
+  alt?: string;
+  caption?: string;
+}
+interface Props {
+  items: ShotItem[];
+  size?: 'md' | 'lg';
+}
+
+const { items, size = 'md' } = Astro.props;
+---
+
+<div class:list={['pcar', size === 'lg' && 'pcar--lg']} style={`--count:${items.length}`}>
+  <div class="pcar__frame">
+    {
+      items.map((item, i) => (
+        <div class="pcar__slide" style={`--i:${i}`}>
+          {item.src ? (
+            <img class="pcar__img" src={item.src} alt={item.alt ?? item.caption ?? ''} loading="lazy" />
+          ) : (
+            <div class="pcar__ph" role="img" aria-label={`${item.caption ?? 'Captura'} — captura pendiente`}>
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="16" rx="2" />
+                <circle cx="9" cy="10" r="2" />
+                <path d="M3 17l5-4 4 3 3-2 6 5" />
+              </svg>
+              <span class="pcar__ph-tag mono">captura pendiente</span>
+            </div>
+          )}
+        </div>
+      ))
+    }
+  </div>
+  <div class="pcar__caps">
+    {
+      items.map((item, i) => (
+        item.caption && (
+          <span class="pcar__cap" style={`--i:${i}`}>{item.caption}</span>
+        )
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .pcar {
+    width: 100%;
+    max-width: 260px;
+    margin-inline: auto;
+  }
+  @media (min-width: 860px) {
+    .pcar { max-width: 300px; }
+  }
+  .pcar--lg {
+    max-width: 300px;
+  }
+  @media (min-width: 860px) {
+    .pcar--lg { max-width: 360px; }
+  }
+
+  .pcar__frame {
+    position: relative;
+    aspect-ratio: 9 / 19.5;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .pcar__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    animation: pcar-fade calc(var(--count) * 5s) ease-in-out infinite;
+    animation-delay: calc(var(--i) * -5s);
+  }
+  .pcar__slide:first-child {
+    opacity: 1;
+  }
+  @keyframes pcar-fade {
+    0% { opacity: 0; }
+    8% { opacity: 1; }
+    30% { opacity: 1; }
+    40% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+  .pcar__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .pcar__ph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    width: 100%;
+    height: 100%;
+    color: var(--text-muted);
+    background: color-mix(in srgb, var(--family) 5%, var(--surface));
+  }
+  .pcar__ph-tag {
+    font-size: 0.7rem;
+  }
+
+  .pcar__caps {
+    position: relative;
+    min-height: 2.4em;
+    margin-top: var(--sp-2);
+  }
+  .pcar__cap {
+    position: absolute;
+    inset: 0;
+    text-align: center;
+    font-size: var(--step-0);
+    color: var(--text-muted);
+    opacity: 0;
+    animation: pcar-fade calc(var(--count) * 5s) ease-in-out infinite;
+    animation-delay: calc(var(--i) * -5s);
+  }
+  .pcar__cap:first-child {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pcar__slide,
+    .pcar__cap {
+      animation: none;
+      opacity: 0;
+    }
+    .pcar__slide:first-child,
+    .pcar__cap:first-child {
+      opacity: 1;
+    }
+  }
+</style>

@@ -1,0 +1,266 @@
+---
+// Tarjeta "proyecto estrella" — variante grande/rica de ProjectCard para destacar ACG
+// como el proyecto más ambicioso. Reutiliza Badge/StackChips/PlatformStrip/ProjectThumb.
+// Coloreada con el color del proyecto (var(--fam) desde el swatch de familia).
+import Badge from './Badge.astro';
+import StackChips from './StackChips.astro';
+import PlatformStrip from './PlatformStrip.astro';
+import ProjectThumb from './ProjectThumb.astro';
+
+interface BadgeItem {
+  label: string;
+  variant?: 'ok' | 'standby' | 'private' | 'accent' | 'family';
+}
+interface Stat {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  name: string;
+  full: string;
+  tagline: string;
+  /** Línea de énfasis ("Mi proyecto más ambicioso…"). */
+  emphasis: string;
+  href: string;
+  family: 'acg' | 'duna' | 'inbox' | 'cumple';
+  flagLabel: string;
+  stack: string[];
+  stats: Stat[];
+  badges?: BadgeItem[];
+  cta: string;
+  platforms?: string[];
+  platformsLabel?: string;
+  /** `banner` = 2 columnas horizontal; `tall` = vertical (para bento). */
+  layout?: 'banner' | 'tall';
+  /** De dónde sale el color: `family` = color del proyecto; `tone` = paleta (dorado/azul). */
+  colorBy?: 'family' | 'tone';
+  /** Con colorBy='tone': primario (dorado) o secundario (azul). */
+  tone?: 'primary' | 'secondary';
+}
+
+const {
+  name,
+  full,
+  tagline,
+  emphasis,
+  href,
+  family,
+  flagLabel,
+  stack,
+  stats,
+  badges = [],
+  cta,
+  platforms = [],
+  platformsLabel,
+  layout = 'banner',
+  colorBy = 'family',
+  tone = 'primary',
+} = Astro.props;
+---
+
+<a class="feat" href={href} data-family={family} data-layout={layout} data-colorby={colorBy} data-tone={tone} data-reveal>
+  <div class="feat__body">
+    <span class="feat__flag mono" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 5.9 6.6.9-4.8 4.6 1.2 6.6-5.9-3.1-5.9 3.1 1.2-6.6L2.5 9.3l6.6-.9z"/></svg>
+      {flagLabel}
+    </span>
+
+    <div class="feat__head">
+      <span class="feat__mark mono" aria-hidden="true">{name.slice(0, 2).toUpperCase()}</span>
+      <span class="feat__names">
+        <span class="feat__name">{name}</span>
+        <span class="feat__full mono">{full}</span>
+      </span>
+      <div class="feat__badges">
+        {badges.map((b) => <Badge variant={b.variant}>{b.label}</Badge>)}
+      </div>
+    </div>
+
+    <p class="feat__emphasis">{emphasis}</p>
+    <p class="feat__tagline">{tagline}</p>
+
+    {platforms.length > 0 && <PlatformStrip items={platforms} label={platformsLabel} />}
+    <StackChips items={stack} />
+
+    <span class="feat__cta mono">
+      {cta}
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+    </span>
+  </div>
+
+  <div class="feat__aside">
+    <ProjectThumb family={family} />
+    {stats.length > 0 && (
+      <div class="feat__stats">
+        {stats.map((s) => (
+          <div class="feat__stat">
+            <span class="feat__stat-v">{s.value}</span>
+            <span class="feat__stat-l">{s.label}</span>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</a>
+
+<style>
+  .feat {
+    --fam: var(--acg);
+    position: relative;
+    display: grid;
+    gap: var(--sp-6);
+    padding: var(--sp-6);
+    border: 1px solid color-mix(in srgb, var(--fam) 30%, var(--border));
+    border-radius: var(--r-lg);
+    /* Glow más presente que en la card normal → lee como pieza destacada. */
+    background:
+      radial-gradient(90% 120% at 100% 0%,
+        color-mix(in srgb, var(--fam) 26%, transparent), transparent 60%),
+      color-mix(in srgb, var(--fam) 8%, var(--surface));
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    color: var(--text);
+    overflow: hidden;
+    transition: transform 0.18s var(--ease), border-color 0.2s var(--ease),
+      box-shadow 0.2s var(--ease);
+  }
+  .feat[data-family='duna'] { --fam: var(--duna); }
+  .feat[data-family='inbox'] { --fam: var(--inbox); }
+  .feat[data-family='cumple'] { --fam: var(--cumple); }
+  /* Color por paleta (dorado/azul) en vez del color de proyecto. */
+  .feat[data-colorby='tone'][data-tone='primary'] { --fam: var(--accent); }
+  .feat[data-colorby='tone'][data-tone='secondary'] { --fam: var(--accent-2); }
+
+  .feat::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: var(--fam);
+  }
+  .feat:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--fam) 60%, var(--border));
+    box-shadow: var(--shadow), 0 18px 40px -16px color-mix(in srgb, var(--fam) 50%, transparent);
+  }
+
+  /* ---- Banner: 2 columnas horizontal ---- */
+  .feat[data-layout='banner'] { grid-template-columns: 1fr; }
+  @media (min-width: 760px) {
+    .feat[data-layout='banner'] {
+      grid-template-columns: 1.35fr 1fr;
+      align-items: center;
+    }
+  }
+
+  /* ---- Tall: vertical, ocupa toda la altura de su celda (bento) ---- */
+  .feat[data-layout='tall'] {
+    grid-template-rows: 1fr auto;
+    height: 100%;
+  }
+
+  .feat__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    min-width: 0;
+  }
+  .feat__flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    align-self: flex-start;
+    padding: 0.24rem 0.66rem;
+    border-radius: var(--r-pill);
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fam);
+    background: color-mix(in srgb, var(--fam) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--fam) 38%, transparent);
+  }
+  .feat__head {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .feat__mark {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--fam);
+    background: color-mix(in srgb, var(--fam) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--fam) 35%, transparent);
+    border-radius: var(--r-md);
+  }
+  .feat__names { display: flex; flex-direction: column; line-height: 1.12; }
+  .feat__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-4);
+  }
+  .feat__full { font-size: var(--step--1); color: var(--text-muted); }
+  .feat__badges { display: flex; gap: var(--sp-2); margin-left: auto; }
+  .feat__emphasis {
+    font-family: var(--font-display);
+    font-weight: 650;
+    font-size: var(--step-2);
+    line-height: 1.25;
+    color: color-mix(in srgb, var(--fam) 55%, var(--text));
+    max-width: 32ch;
+  }
+  .feat__tagline {
+    color: var(--text);
+    font-size: var(--step-1);
+    font-weight: 450;
+    line-height: 1.4;
+    max-width: 46ch;
+  }
+  .feat__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin-top: var(--sp-1);
+    font-size: var(--step--1);
+    color: var(--fam);
+    letter-spacing: 0.02em;
+  }
+  .feat:hover .feat__cta svg { transform: translateX(3px); }
+  .feat__cta svg { transition: transform 0.18s var(--ease); }
+
+  .feat__aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    justify-content: center;
+    min-width: 0;
+  }
+  .feat__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-3);
+  }
+  .feat__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: var(--sp-3);
+    border: 1px solid color-mix(in srgb, var(--fam) 22%, var(--border));
+    border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--fam) 7%, var(--surface));
+  }
+  .feat__stat-v {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-2);
+    line-height: 1;
+    color: color-mix(in srgb, var(--fam) 72%, var(--text));
+    font-variant-numeric: tabular-nums;
+  }
+  .feat__stat-l { font-size: 0.72rem; color: var(--text-muted); line-height: 1.2; }
+</style>

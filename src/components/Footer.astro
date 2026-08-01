@@ -1,0 +1,116 @@
+---
+import { type Locale, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+
+const links = [
+  { href: 'mailto:casanovasecp89@gmail.com', label: 'casanovasecp89@gmail.com', external: false },
+  { href: 'https://github.com/erico089dev', label: 'GitHub', external: true },
+  {
+    href: 'https://www.linkedin.com/in/%C3%A8ric-casanovas-p%C3%A9rez-033a6723a/',
+    label: 'LinkedIn',
+    external: true,
+  },
+];
+---
+
+<footer class="footer" id="contacto">
+  <div class="container footer__grid" data-reveal>
+    <div class="footer__brand">
+      <p class="footer__name">Èric Casanovas Pérez</p>
+      <p class="eyebrow">{t('footer.tagline')}</p>
+    </div>
+    <ul class="footer__links">
+      {
+        links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              target={l.external ? '_blank' : undefined}
+              rel={l.external ? 'noopener noreferrer' : undefined}
+            >
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  <div class="container footer__legal" data-reveal>
+    <p class="footer__note">{t('footer.repos')}</p>
+    <p class="mono footer__year">© {year}</p>
+  </div>
+</footer>
+
+<style>
+  /* El fondo (surface) se pinta en una capa ::before cuyo borde superior se desvanece
+     hacia el fondo de la página (--bg), igual que las bandas de sección: así el footer
+     "entra" con un degradado en vez de con una línea de corte. */
+  .footer {
+    position: relative;
+    background: transparent;
+    padding-block: var(--sp-8) var(--sp-6);
+    margin-top: var(--sp-9);
+  }
+  .footer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: var(--surface);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 96px);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 96px);
+  }
+  .footer > .container {
+    position: relative;
+    z-index: 1;
+  }
+  .footer__grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--sp-6);
+    padding-bottom: var(--sp-6);
+  }
+  .footer__name {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+  }
+  .footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    list-style: none;
+    padding: 0;
+  }
+  .footer__links a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .footer__links a:hover {
+    color: var(--accent);
+  }
+  .footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--border);
+  }
+  .footer__note,
+  .footer__year {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+    max-width: none;
+  }
+</style>

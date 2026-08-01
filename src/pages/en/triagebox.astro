@@ -1,0 +1,184 @@
+---
+import Base from '../../layouts/Base.astro';
+import Section from '../../components/Section.astro';
+import ProjectHero from '../../components/ProjectHero.astro';
+import InboxStoryboard from '../../components/InboxStoryboard.astro';
+import ConceptFlow from '../../components/ConceptFlow.astro';
+import StatRow from '../../components/StatRow.astro';
+import { getLocaleFromUrl, useTranslations, useRawTranslations } from '../../i18n/utils';
+
+type Variant = 'ok' | 'standby' | 'private' | 'accent' | 'family' | 'gold';
+interface BadgeItem { label: string; variant?: Variant }
+interface Stat { value: string; label: string; tone?: 'primary' | 'secondary' }
+interface DesignPoint { title: string; note: string }
+interface Stage { label: string; sub?: string; icon?: string; platforms?: string[] }
+interface Panel { title: string; sub: string }
+
+const locale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(locale);
+const tRaw = useRawTranslations(locale);
+
+const badges = tRaw<BadgeItem[]>('inbox.badges', []);
+const stats = tRaw<Stat[]>('inbox.stats', []);
+const design = tRaw<DesignPoint[]>('inbox.design.items', []);
+const concept = tRaw<Stage[]>('inbox.concept.stages', []);
+const panels = tRaw<Panel[]>('inbox.story.panels', []);
+
+const REPO = 'https://github.com/erico089dev/triagebox';
+---
+
+<Base title={t('inbox.meta.title')} description={t('inbox.meta.description')} family="inbox">
+  <ProjectHero
+    name={t('inbox.name')}
+    full={t('inbox.full')}
+    tagline={t('inbox.tagline')}
+    badges={badges}
+    backLabel={t('inbox.back')}
+    backHref={`/${locale}/#proyectos`}
+  >
+    <ConceptFlow slot="visual" stages={concept} />
+  </ProjectHero>
+
+  <Section flush band="surface" eyebrow={t('inbox.story.eyebrow')} title={t('inbox.story.title')}>
+    <p class="prose" data-reveal>{t('inbox.story.caption')}</p>
+    <div class="story" data-reveal>
+      <InboxStoryboard panels={panels} />
+    </div>
+  </Section>
+
+  <Section flush eyebrow={t('inbox.example.eyebrow')} title={t('inbox.example.title')}>
+    <p class="prose" data-reveal set:html={t('inbox.example.body')} />
+  </Section>
+
+  <Section flush band="surface" eyebrow={t('inbox.design.eyebrow')} title={t('inbox.design.title')}>
+    <div class="hl-grid">
+      {
+        design.map((d) => (
+          <article class="hl" data-reveal>
+            <h3 class="hl__title">{d.title}</h3>
+            <p class="hl__note">{d.note}</p>
+          </article>
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section flush eyebrow={t('inbox.skill.eyebrow')} title={t('inbox.skill.title')}>
+    <div class="skill" data-reveal>
+      <span class="skill__cmd mono">/tickets</span>
+      <p class="skill__body">{t('inbox.skill.body')}</p>
+    </div>
+  </Section>
+
+  <StatRow items={stats} />
+
+  <Section flush band="surface" eyebrow={t('inbox.honesty.eyebrow')} title={t('inbox.honesty.title')}>
+    <p class="prose" data-reveal>{t('inbox.honesty.body')}</p>
+    <a class="repocta" href={REPO} target="_blank" rel="noopener noreferrer" data-reveal>
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.7 18 5 18 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.3.8 1 .8 2.1v3.1c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+      <span>{t('inbox.honesty.cta')}</span>
+    </a>
+  </Section>
+
+  <nav class="ddnav container" aria-label="Navegación entre proyectos">
+    <a class="ddnav__link mono" href={`/${locale}/duna`}>{t('inbox.nav.back')}</a>
+    <a class="ddnav__link ddnav__next mono" href={`/${locale}/cumple`}>{t('inbox.nav.next')}</a>
+  </nav>
+</Base>
+
+<style>
+  .prose {
+    font-size: var(--step-1);
+    color: var(--text-muted);
+    max-width: 68ch;
+  }
+  .story {
+    margin-top: var(--sp-6);
+  }
+  .hl-grid {
+    display: grid;
+    gap: var(--sp-4);
+  }
+  @media (min-width: 720px) {
+    .hl-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .hl {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding: var(--sp-5);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--family);
+    border-radius: var(--r-md);
+    /* En la banda "surface" las tarjetas van en surface-2 (más tinte) para que NO se
+       fundan con el fondo de la sección — antes eran del mismo color y se veían planas. */
+    background: var(--surface-2);
+  }
+  .hl__title { font-size: var(--step-1); }
+  .hl__note {
+    color: var(--text-muted);
+    max-width: none;
+    line-height: 1.55;
+  }
+
+  .skill {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: var(--sp-6);
+    border: 1px solid color-mix(in srgb, var(--family) 40%, var(--border));
+    border-radius: var(--r-lg);
+    background: color-mix(in srgb, var(--family) 6%, var(--surface));
+    max-width: 60rem;
+  }
+  .skill__cmd {
+    align-self: flex-start;
+    font-size: var(--step-1);
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--r-sm);
+    color: var(--family);
+    background: color-mix(in srgb, var(--family) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--family) 35%, transparent);
+  }
+  .skill__body {
+    font-size: var(--step-1);
+    color: var(--text);
+    max-width: 68ch;
+  }
+
+  /* CTA a GitHub (repo público) — botón sólido con el azul de la familia. */
+  .repocta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin-top: var(--sp-5);
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--r-md);
+    background: var(--family);
+    color: var(--accent-ink);
+    font-family: var(--font-mono);
+    font-size: var(--step-0);
+    text-decoration: none;
+    box-shadow: var(--shadow);
+    transition: transform 0.18s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .repocta:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow), 0 12px 28px -12px color-mix(in srgb, var(--family) 60%, transparent);
+  }
+  .repocta svg { flex-shrink: 0; }
+
+  .ddnav {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    padding-block: var(--sp-8);
+  }
+  .ddnav__link {
+    font-size: var(--step-0);
+    text-decoration: none;
+    color: var(--text-muted);
+  }
+  .ddnav__link:hover { color: var(--family); }
+  .ddnav__next { color: var(--family); }
+</style>
