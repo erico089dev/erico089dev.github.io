@@ -137,7 +137,13 @@ const {
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: 1fr;
+    /* `minmax(0, 1fr)` (no `1fr`): en móvil la única columna comparte pista con el
+       carrusel del hero, cuyo min-content no cabe en 1 columna estrecha. Con `1fr`
+       el mínimo de la pista es `auto` → la pista se ensancha al min-content del
+       carrusel y arrastra al bloque de texto, que se sale y queda recortado por
+       `.hero { overflow: hidden }` (subtítulo cortado a media palabra). El `0` de
+       mínimo evita ese "grid blowout". */
+    grid-template-columns: minmax(0, 1fr);
     justify-items: start;
     align-items: center;
     gap: var(--sp-6);
@@ -227,7 +233,7 @@ const {
   }
   @media (min-width: 860px) {
     .hero__inner {
-      grid-template-columns: 1fr minmax(0, 26rem);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
       gap: var(--sp-8);
       padding-block: var(--sp-10) var(--sp-9);
     }

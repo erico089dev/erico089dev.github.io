@@ -26,7 +26,25 @@ const projects = tRaw<Project[]>('projects.items', []);
 const count = projects.length || 1;
 // Clon del primero al final → bucle sin salto.
 const slides = projects.length ? [...projects, projects[0]] : [];
+
+// Keyframes generados según el nº real de proyectos (antes estaban hardcodeados a 4 y
+// al pasar a 3 el carrusel se paraba a media diapositiva). Hay `count + 1` posiciones
+// (proyectos + clon del primero); cada una ocupa `100/(count+1)%` del track y del
+// tiempo. En cada posición hay una pausa (0.8 del segmento) y luego desliza al siguiente.
+const segs = count + 1;
+const seg = 100 / segs;
+const round = (n: number) => Number(n.toFixed(3));
+let carouselSteps = '';
+for (let k = 0; k <= count; k++) {
+  const start = round(k * seg);
+  const end = k === count ? 100 : round(k * seg + seg * 0.8);
+  const tx = round(-k * seg);
+  carouselSteps += `${start}%, ${end}% { transform: translateX(${tx}%); } `;
+}
+const carouselKeyframes = `@keyframes spot-carousel-dyn { ${carouselSteps}}`;
 ---
+
+<style is:global set:html={carouselKeyframes}></style>
 
 <div class="spot">
   <span class="spot__label mono">
@@ -99,7 +117,7 @@ const slides = projects.length ? [...projects, projects[0]] : [];
     display: flex;
     height: 100%;
     width: calc((var(--count) + 1) * 100%);
-    animation: spot-carousel calc((var(--count) + 1) * 4s) cubic-bezier(0.7, 0, 0.2, 1) infinite;
+    animation: spot-carousel-dyn calc((var(--count) + 1) * 4s) cubic-bezier(0.7, 0, 0.2, 1) infinite;
   }
   .spot__item {
     flex: 0 0 calc(100% / (var(--count) + 1));
@@ -152,16 +170,8 @@ const slides = projects.length ? [...projects, projects[0]] : [];
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  /* Carrusel: pausa en cada proyecto, luego desliza al siguiente. 5 posiciones
-     (4 proyectos + clon del primero) → paso de 20%. El último (-80%) es el clon, que
-     coincide con el 0% del siguiente ciclo → bucle continuo. */
-  @keyframes spot-carousel {
-    0%, 16% { transform: translateX(0); }
-    20%, 36% { transform: translateX(-20%); }
-    40%, 56% { transform: translateX(-40%); }
-    60%, 76% { transform: translateX(-60%); }
-    80%, 100% { transform: translateX(-80%); }
-  }
+  /* Los keyframes del carrusel (`spot-carousel-dyn`) se generan en el frontmatter según
+     el nº real de proyectos (ver arriba) → siempre cuadran, sean 3, 4 o los que haya. */
   @keyframes spot-pulse {
     0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-2, var(--accent)) 55%, transparent); }
     70% { box-shadow: 0 0 0 7px transparent; }

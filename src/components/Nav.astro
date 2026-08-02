@@ -28,16 +28,67 @@ const links = [
       </span>
     </a>
 
-    <nav class="nav__links" aria-label="Principal">
-      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    <nav class="nav__links" id="nav-menu" aria-label="Principal">
+      {links.map((l) => <a href={l.href} data-nav-link>{l.label}</a>)}
+      <div class="nav__menu-langs"><LangSwitcher locale={locale} /></div>
     </nav>
 
     <div class="nav__actions">
-      <LangSwitcher locale={locale} />
+      <div class="nav__bar-langs"><LangSwitcher locale={locale} /></div>
       <ThemeToggle />
+      <button
+        class="nav__burger"
+        type="button"
+        aria-label="Abrir menú"
+        aria-controls="nav-menu"
+        aria-expanded="false"
+        data-menu-toggle
+      >
+        <svg class="nav__burger-open" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+        <svg class="nav__burger-close" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
+      </button>
     </div>
   </div>
 </header>
+
+<script is:inline>
+  (function () {
+    var header = document.querySelector('.nav');
+    var btn = document.querySelector('[data-menu-toggle]');
+    if (!header || !btn) return;
+
+    function isOpen() { return header.hasAttribute('data-open'); }
+    function setOpen(open) {
+      if (open) {
+        header.setAttribute('data-open', '');
+        btn.setAttribute('aria-expanded', 'true');
+        btn.setAttribute('aria-label', 'Cerrar menú');
+      } else {
+        header.removeAttribute('data-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Abrir menú');
+      }
+    }
+
+    btn.addEventListener('click', function () { setOpen(!isOpen()); });
+    // Cerrar al navegar a una sección
+    header.querySelectorAll('[data-nav-link]').forEach(function (a) {
+      a.addEventListener('click', function () { setOpen(false); });
+    });
+    // Esc cierra y devuelve el foco al botón
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isOpen()) { setOpen(false); btn.focus(); }
+    });
+    // Si se agranda a desktop con el menú abierto, resetea el estado
+    window.matchMedia('(min-width: 800px)').addEventListener('change', function (e) {
+      if (e.matches) setOpen(false);
+    });
+  })();
+</script>
 
 <style>
   .nav {
@@ -73,6 +124,7 @@ const links = [
     color: var(--accent-ink);
     background: var(--accent);
     border-radius: var(--r-sm);
+    flex-shrink: 0;
   }
   .brand__text {
     display: flex;
@@ -88,27 +140,123 @@ const links = [
     font-size: 0.7rem;
     color: var(--text-muted);
   }
-  .nav__links {
-    display: none;
-    gap: var(--sp-5);
-  }
-  .nav__links a {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: var(--step-0);
-    font-weight: 550;
-  }
-  .nav__links a:hover {
-    color: var(--text);
-  }
   .nav__actions {
     display: inline-flex;
     align-items: center;
     gap: var(--sp-3);
   }
+
+  /* ---------- Botón hamburguesa (solo móvil) ---------- */
+  .nav__burger {
+    display: inline-grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+  .nav__burger:hover {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+    color: var(--accent);
+  }
+  .nav__burger-open { display: block; }
+  .nav__burger-close { display: none; }
+  .nav[data-open] .nav__burger-open { display: none; }
+  .nav[data-open] .nav__burger-close { display: block; }
+
+  /* ---------- Menú móvil (base = móvil) ---------- */
+  .nav__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+  .nav__links a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 550;
+  }
+  .nav__links a:hover { color: var(--accent); }
+
+  /* Selector de idioma: en la barra solo en desktop; en móvil, dentro del menú. */
+  .nav__bar-langs { display: none; }
+
+  /* Menú móvil "overlay": panel a pantalla completa bajo la barra.
+     Se usa `position: absolute` (no `fixed`): el `.nav` tiene `backdrop-filter`, que
+     convierte al header en bloque contenedor de cualquier `fixed` descendiente (lo
+     colapsaría a la altura de la barra). Con `absolute` + `top: 100%` + alto `100svh`
+     el panel cae bajo la barra y cubre el resto de la pantalla. Opaco → sin scrim. */
+  .nav__links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 100svh;
+    background: var(--surface);
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--sp-4);
+    padding: var(--sp-9) var(--pad-x) var(--sp-8);
+    /* oculto por defecto */
+    opacity: 0;
+    transform: translateY(-6px);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), visibility 0.25s;
+  }
+  .nav__links a {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-4);
+    padding: var(--sp-3) var(--sp-4);
+  }
+  .nav__menu-langs {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--sp-4);
+  }
+  .nav[data-open] .nav__links {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav__links { transition: none; }
+  }
+
+  /* ---------- Desktop: enlaces en línea, sin hamburguesa ---------- */
   @media (min-width: 800px) {
+    .nav__burger { display: none; }
+    .nav__menu-langs { display: none; }
+    .nav__bar-langs { display: inline-flex; }
+    /* Resetea el panel de menú a fila horizontal estática */
     .nav__links {
-      display: inline-flex;
+      position: static;
+      height: auto;
+      inset: auto;
+      flex-direction: row;
+      gap: var(--sp-5);
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      padding: 0;
+      opacity: 1;
+      transform: none;
+      visibility: visible;
+      pointer-events: auto;
     }
+    .nav__links a {
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: var(--step-0);
+    }
+    .nav__links a:hover { color: var(--text); }
   }
 </style>

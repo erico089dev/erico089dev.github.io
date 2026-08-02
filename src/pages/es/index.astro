@@ -1,6 +1,6 @@
 ---
 import { existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 import Base from '../../layouts/Base.astro';
 import Section from '../../components/Section.astro';
 import Hero from '../../components/Hero.astro';
@@ -47,14 +47,16 @@ const support = tRaw<Role[]>('about.support', []);
 const sw = tRaw<string[]>('about.sw', []);
 const aiSkills = tRaw<string[]>('about.ai', []);
 const cvHref = `/cv/eric-casanovas-cv-${locale}.pdf`;
-// El CV real aún no está subido (ver public/cv/README.md). En vez de enlazar a un
-// PDF que da 404, se comprueba en build-time si el archivo ya existe: mientras no
-// esté, el botón se muestra desactivado; en cuanto Èric lo suba, aparece solo.
-const cvReady = existsSync(fileURLToPath(new URL(`../../../public${cvHref}`, import.meta.url)));
+// Se comprueba en build-time si el PDF ya existe: mientras no esté, el botón se muestra
+// desactivado; en cuanto exista, aparece el enlace de descarga solo.
+// Ruta desde la raíz del proyecto (process.cwd() en `astro build`). OJO: NO usar
+// import.meta.url — en el build de Astro apunta al módulo compilado, no a este .astro,
+// así que `../../../public` fallaba y el CV salía SIEMPRE "en preparación".
+const cvReady = existsSync(join(process.cwd(), 'public', 'cv', `eric-casanovas-cv-${locale}.pdf`));
 // Solo en EN hay dos CV distintos (versión España y versión internacional): se añade
 // un segundo botón únicamente si ese PDF extra existe.
 const cvIntlHref = '/cv/eric-casanovas-cv-en-intl.pdf';
-const cvIntlReady = locale === 'en' && existsSync(fileURLToPath(new URL(`../../../public${cvIntlHref}`, import.meta.url)));
+const cvIntlReady = locale === 'en' && existsSync(join(process.cwd(), 'public', 'cv', 'eric-casanovas-cv-en-intl.pdf'));
 
 // Iconos inline (self-hosted) para el esquema "¿Qué hace Èric?".
 const roleIcon: Record<string, string> = {
