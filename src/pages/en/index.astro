@@ -14,7 +14,7 @@ interface Role { id: string; label: string; desc: string }
 interface Stat { value: string; label: string }
 interface Project {
   id: string;
-  family: 'acg' | 'duna' | 'inbox' | 'cumple';
+  family: 'acg' | 'duna' | 'inbox';
   icon?: string;
   name: string;
   full: string;
@@ -51,6 +51,10 @@ const cvHref = `/cv/eric-casanovas-cv-${locale}.pdf`;
 // PDF que da 404, se comprueba en build-time si el archivo ya existe: mientras no
 // esté, el botón se muestra desactivado; en cuanto Èric lo suba, aparece solo.
 const cvReady = existsSync(fileURLToPath(new URL(`../../../public${cvHref}`, import.meta.url)));
+// Solo en EN hay dos CV distintos (versión España y versión internacional): se añade
+// un segundo botón únicamente si ese PDF extra existe.
+const cvIntlHref = '/cv/eric-casanovas-cv-en-intl.pdf';
+const cvIntlReady = locale === 'en' && existsSync(fileURLToPath(new URL(`../../../public${cvIntlHref}`, import.meta.url)));
 
 // Iconos inline (self-hosted) para el esquema "¿Qué hace Èric?".
 const roleIcon: Record<string, string> = {
@@ -147,13 +151,19 @@ const aiIcon = '<path d="M12 3l1.6 3.9L18 8.5l-3.9 1.6L12 14l-1.6-3.9L6 8.5l4.4-
           <span class="cv__note">{t('about.cvNote')}</span>
           {cvReady ? (
             <a class="cv__btn" href={cvHref} download>
-              {t('about.cvCta')}
+              {cvIntlReady ? t('about.cvCtaSpain') : t('about.cvCta')}
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" /></svg>
             </a>
           ) : (
             <span class="cv__btn cv__btn--soon" aria-disabled="true" title={t('about.cvSoonHint')}>
               {t('about.cvSoonCta')}
             </span>
+          )}
+          {cvIntlReady && (
+            <a class="cv__btn" href={cvIntlHref} download>
+              {t('about.cvCtaIntl')}
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" /></svg>
+            </a>
           )}
         </div>
       </aside>

@@ -13,7 +13,7 @@ interface Props {
   full: string;
   tagline: string;
   href: string;
-  family: 'acg' | 'duna' | 'inbox' | 'cumple';
+  family: 'acg' | 'duna' | 'inbox';
   /** Icono real de la app (si existe); si no, se usa el mark de 2 letras. */
   icon?: string;
   stack: string[];
@@ -107,7 +107,6 @@ const {
   .card[data-colorby='family'][data-family='acg'] { --fam: var(--acg); }
   .card[data-colorby='family'][data-family='duna'] { --fam: var(--duna); }
   .card[data-colorby='family'][data-family='inbox'] { --fam: var(--inbox); }
-  .card[data-colorby='family'][data-family='cumple'] { --fam: var(--cumple); }
   /* Neutro: gris apagado (para acompañar sin competir con el proyecto estrella). */
   .card[data-colorby='neutral'] { --fam: var(--standby); }
 

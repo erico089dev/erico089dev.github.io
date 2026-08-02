@@ -32,11 +32,8 @@ const {
   </div>
   <div class="container hero__inner">
     <div class="hero__text">
-      <div class="hero__avatar" data-reveal title="Placeholder — aquí irá tu foto">
-        <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-label="Foto (placeholder)">
-          <circle cx="48" cy="38" r="15" class="av-fig" />
-          <path d="M24 88 C24 68 72 68 72 88 Z" class="av-fig" />
-        </svg>
+      <div class="hero__avatar" data-reveal>
+        <img src="/eric.jpg" alt="Èric Casanovas Pérez" width="96" height="96" loading="eager" decoding="async" />
       </div>
       <p class="eyebrow" data-reveal>{kicker}</p>
       <h1 class="hero__title" data-reveal>{title}</h1>
@@ -152,7 +149,6 @@ const {
     gap: var(--sp-4);
     max-width: 40rem;
   }
-  /* Foto de presentación (placeholder de silueta; se sustituye por foto real). */
   .hero__avatar {
     width: 5.5rem;
     height: 5.5rem;
@@ -162,8 +158,7 @@ const {
     border: 2px solid var(--accent);
     box-shadow: var(--shadow);
   }
-  .hero__avatar svg { width: 100%; height: 100%; display: block; }
-  .av-fig { fill: color-mix(in srgb, var(--text) 34%, transparent); }
+  .hero__avatar img { width: 100%; height: 100%; display: block; object-fit: cover; }
   /* Entrada escalonada: los bloques del hero encadenan su reveal en vez de aparecer
      en bloque. En reduced-motion el reveal global ya queda visible sin transición. */
   .hero__text > [data-reveal]:nth-child(1) { transition-delay: 0s; }

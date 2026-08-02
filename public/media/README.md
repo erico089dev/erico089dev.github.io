@@ -10,11 +10,10 @@ public/media/
   acg/     capturas de ACG (dashboard, ACGManager, un Reel) + audios de voz clonada
   duna/    capturas de Duna (PWA móvil, chat, tareas/calendario)
   inbox/   (opcional) capturas del flujo de tickets
-  cumple/  capturas de la web de cumpleaños (portada, escena, final con confeti)
 ```
 
-> **Avatar de la portada:** ahora se usa tu foto de perfil de GitHub, guardada en `public/eric.png`.
-> Si quieres otra foto, sustituye ese archivo (cuadrada, ~400×400px o más) y listo.
+> **Avatar de la portada:** tu foto real, guardada en `public/eric.jpg`. Si quieres cambiarla, sustituye
+> ese archivo (cuadrada, ~400×400px o más) y listo.
 
 ## Cómo enchufarlo (sin tocar componentes)
 

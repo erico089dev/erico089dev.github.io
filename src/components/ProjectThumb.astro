@@ -3,7 +3,7 @@
 // coloreado con var(--fam) (el color del proyecto). Son representaciones abstractas
 // tipo "wireframe", pensadas como placeholder hasta tener capturas reales.
 interface Props {
-  family: 'acg' | 'duna' | 'inbox' | 'cumple';
+  family: 'acg' | 'duna' | 'inbox';
 }
 const { family } = Astro.props;
 ---
@@ -42,20 +42,6 @@ const { family } = Astro.props;
       <rect x="104" y="26" width="118" height="68" rx="10" class="t-stroke" />
       <path d="M118 44 h72 M118 60 h90 M118 76 h50" class="t-stroke-thin" />
       <circle cx="200" cy="44" r="7" class="t-fill" />
-    </svg>
-  )}
-  {family === 'cumple' && (
-    <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Esquema Cumple">
-      <rect x="58" y="18" width="124" height="84" rx="12" class="t-stroke" />
-      <rect x="104" y="56" width="34" height="30" rx="3" class="t-fillsoft" />
-      <rect x="100" y="47" width="42" height="12" rx="3" class="t-soft" />
-      <path d="M121 47 v39" class="t-stroke-thin" />
-      <circle cx="115" cy="45" r="4.5" class="t-fill" />
-      <circle cx="127" cy="45" r="4.5" class="t-fill" />
-      <circle cx="80" cy="38" r="3" class="t-fill" />
-      <circle cx="162" cy="36" r="3" class="t-soft-dot" />
-      <circle cx="156" cy="72" r="2.5" class="t-fill" />
-      <circle cx="86" cy="74" r="2.5" class="t-soft-dot" />
     </svg>
   )}
 </div>

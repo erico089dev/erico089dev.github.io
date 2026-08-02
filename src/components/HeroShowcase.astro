@@ -14,7 +14,7 @@ const tRaw = useRawTranslations(locale);
 
 interface Project {
   id: string;
-  family: 'acg' | 'duna' | 'inbox' | 'cumple';
+  family: 'acg' | 'duna' | 'inbox';
   name: string;
   full: string;
   tagline: string;
@@ -57,7 +57,6 @@ const count = projects.length || 1;
   .show__slide[data-family='acg'] { --fam: var(--acg); }
   .show__slide[data-family='duna'] { --fam: var(--duna); }
   .show__slide[data-family='inbox'] { --fam: var(--inbox); }
-  .show__slide[data-family='cumple'] { --fam: var(--cumple); }
 
   /* Halo de color de la familia, difuminado, en el lado derecho. */
   .show__glow {

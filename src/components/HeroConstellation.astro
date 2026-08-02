@@ -1,6 +1,6 @@
 ---
-// Fondo ambiental del hero de la home: una "constelación" con los 4 colores de
-// proyecto (acg / duna / inbox / cumple). CSS puro, sin JS. Reutiliza el truco de
+// Fondo ambiental del hero de la home: una "constelación" con los 3 colores de
+// proyecto (acg / duna / inbox). CSS puro, sin JS. Reutiliza el truco de
 // deriva de DunaDuneField (un contenedor sobredimensionado que mueve todo el grupo
 // junto, así las líneas entre nodos nunca se desalinean) y los halos que respiran de
 // duna.astro (.disc__halo). Decorativo → aria-hidden.
@@ -12,14 +12,12 @@ const nodes = [
   { family: 'acg', x: 58, y: 22 },
   { family: 'duna', x: 83, y: 15 },
   { family: 'inbox', x: 90, y: 53 },
-  { family: 'cumple', x: 64, y: 68 },
 ];
-// Anillo cerrado: acg → duna → inbox → cumple → acg.
+// Anillo cerrado: acg → duna → inbox → acg.
 const links = [
   [0, 1],
   [1, 2],
-  [2, 3],
-  [3, 0],
+  [2, 0],
 ];
 ---
 
@@ -98,7 +96,6 @@ const links = [
   .constel__node--acg { --c: var(--acg); }
   .constel__node--duna { --c: var(--duna); }
   .constel__node--inbox { --c: var(--inbox); }
-  .constel__node--cumple { --c: var(--cumple); }
 
   /* Halo difuminado que "respira", desfasado por nodo (--i). */
   .constel__halo {

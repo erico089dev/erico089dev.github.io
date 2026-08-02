@@ -34,6 +34,8 @@
     "strength": "Si algo me define es la adaptabilidad. Sobre una base de ingeniero de software y científico de datos —y con la IA de aliada— me muevo con soltura fuera de mi terreno: cambio de lenguaje, sigo entendiendo el código y la estructura de proyectos que no son míos y acabo manejándome en entornos ajenos con bastante rapidez. Esa capacidad de adaptarme es mi punto más fuerte.",
     "cvNote": "¿Quieres el detalle formal, con fechas y empresas?",
     "cvCta": "Descargar CV",
+    "cvCtaSpain": "Descargar CV (España)",
+    "cvCtaIntl": "Descargar CV (internacional)",
     "cvSoonCta": "CV en preparación",
     "cvSoonHint": "Aún no he subido el PDF — vuelve pronto o escríbeme directamente.",
     "doingEyebrow": "¿Qué hace Èric?",
@@ -105,16 +107,6 @@
         "platforms": ["mic", "ticket", "claude"],
         "stack": ["FastAPI", "faster-whisper", "Skill de Claude", "Multi-tenant"],
         "badges": [{ "label": "público", "variant": "accent" }]
-      },
-      {
-        "id": "cumple",
-        "family": "cumple",
-        "name": "Cumple",
-        "full": "Regalo hecho con código",
-        "tagline": "Una web interactiva que le hice a mi pareja para su cumpleaños. También disfruto programando para mis seres queridos.",
-        "href": "/es/cumple",
-        "stack": ["HTML/CSS", "Interactivo", "Hecho a mano"],
-        "badges": [{ "label": "personal", "variant": "accent" }, { "label": "en construcción", "variant": "standby" }]
       }
     ]
   },
@@ -402,66 +394,6 @@
     },
     "nav": {
       "back": "← Duna",
-      "next": "Siguiente: Cumple →"
-    }
-  },
-  "cumple": {
-    "meta": {
-      "title": "Cumple — Un regalo hecho con código · Èric Casanovas Pérez",
-      "description": "Una web interactiva hecha a mano como regalo de cumpleaños para mi pareja: escenas, sonido y confeti. Código con cariño."
-    },
-    "back": "Proyectos",
-    "name": "Cumple",
-    "full": "Regalo hecho con código",
-    "tagline": "Una web interactiva que le hice a mi pareja para su cumpleaños.",
-    "badges": [
-      { "label": "personal", "variant": "family" },
-      { "label": "en construcción", "variant": "standby" }
-    ],
-    "wip": {
-      "title": "Página en construcción",
-      "body": "Todavía me faltan las capturas reales de esta web-regalo. La estructura y el texto ya están, pero las imágenes de abajo son de muestra por ahora."
-    },
-    "concept": {
-      "stages": [
-        { "label": "Una idea con cariño", "icon": "idea" },
-        { "label": "Web hecha a mano", "sub": "HTML, CSS y JS", "icon": "code" },
-        { "label": "Escenas, sonido y confeti", "icon": "sparkles" },
-        { "label": "Un regalo para ella", "icon": "heart" }
-      ]
-    },
-    "stats": [],
-    "story": {
-      "eyebrow": "La idea",
-      "title": "También programo para mis seres queridos",
-      "body": "No todo es infraestructura y microservicios. Algunas de las cosas que más me ha gustado hacer son para la gente que quiero. Esta es una web interactiva que le hice a mi pareja para su cumpleaños: se abre como una pequeña experiencia, con escenas que pasas una a una, sonido y confeti. HTML, CSS y JavaScript a mano, sin frameworks — solo ganas de sorprenderla."
-    },
-    "gallery": {
-      "eyebrow": "Capturas",
-      "title": "Cómo se ve",
-      "items": [
-        { "caption": "La portada de la experiencia" },
-        { "caption": "Una de las escenas interactivas" },
-        { "caption": "El final, con confeti" }
-      ]
-    },
-    "highlights": {
-      "eyebrow": "Detalles",
-      "title": "Lo que le puse dentro",
-      "items": [
-        { "title": "Escenas interactivas", "note": "La web avanza por escenas que la persona va descubriendo una a una, a su ritmo." },
-        { "title": "Tipografía con carácter", "note": "Fraunces + Inter para darle un aire cálido y cuidado, lejos de lo genérico." },
-        { "title": "Sonido y confeti", "note": "Pequeños detalles de animación y audio que hacen que el momento se sienta especial." },
-        { "title": "HTML puro", "note": "Hecho a mano, sin frameworks: ligero, rápido y fácil de alojar en cualquier sitio." }
-      ]
-    },
-    "honesty": {
-      "eyebrow": "Personal",
-      "title": "Código con cariño",
-      "body": "Es un proyecto pequeño y personal, pero de los que más ilusión me hace enseñar: demuestra que me gusta cuidar el diseño y el detalle, y que la programación también me sirve para hacer feliz a la gente que quiero."
-    },
-    "nav": {
-      "back": "← triagebox",
       "next": "Todos los proyectos →"
     }
   }

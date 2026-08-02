@@ -34,6 +34,8 @@
     "strength": "If anything defines me, it's adaptability. On a foundation of software engineering and data science —and with AI as an ally— I move comfortably outside my own turf: I switch languages, keep making sense of code and project structures that aren't mine, and end up finding my way in unfamiliar environments pretty fast. That ability to adapt is my strongest point.",
     "cvNote": "Want the formal detail, with dates and companies?",
     "cvCta": "Download CV",
+    "cvCtaSpain": "Download CV (Spain)",
+    "cvCtaIntl": "Download CV (international)",
     "cvSoonCta": "CV coming soon",
     "cvSoonHint": "I haven't uploaded the PDF yet — check back soon or just message me.",
     "doingEyebrow": "What does Èric do?",
@@ -105,16 +107,6 @@
         "platforms": ["mic", "ticket", "claude"],
         "stack": ["FastAPI", "faster-whisper", "Claude skill", "Multi-tenant"],
         "badges": [{ "label": "public", "variant": "accent" }]
-      },
-      {
-        "id": "cumple",
-        "family": "cumple",
-        "name": "Cumple",
-        "full": "A gift made with code",
-        "tagline": "An interactive website I made for my partner's birthday. I also enjoy coding for the people I love.",
-        "href": "/en/cumple",
-        "stack": ["HTML/CSS", "Interactive", "Handmade"],
-        "badges": [{ "label": "personal", "variant": "accent" }, { "label": "work in progress", "variant": "standby" }]
       }
     ]
   },
@@ -402,66 +394,6 @@
     },
     "nav": {
       "back": "← Duna",
-      "next": "Next: Cumple →"
-    }
-  },
-  "cumple": {
-    "meta": {
-      "title": "Cumple — A gift made with code · Èric Casanovas Pérez",
-      "description": "An interactive website handmade as a birthday gift for my partner: scenes, sound and confetti. Code made with care."
-    },
-    "back": "Projects",
-    "name": "Cumple",
-    "full": "A gift made with code",
-    "tagline": "An interactive website I made for my partner's birthday.",
-    "badges": [
-      { "label": "personal", "variant": "family" },
-      { "label": "work in progress", "variant": "standby" }
-    ],
-    "wip": {
-      "title": "Page under construction",
-      "body": "The real screenshots of this gift website are still missing. The structure and copy are done, but the images below are placeholders for now."
-    },
-    "concept": {
-      "stages": [
-        { "label": "An idea, with love", "icon": "idea" },
-        { "label": "Handmade website", "sub": "HTML, CSS & JS", "icon": "code" },
-        { "label": "Scenes, sound & confetti", "icon": "sparkles" },
-        { "label": "A gift for her", "icon": "heart" }
-      ]
-    },
-    "stats": [],
-    "story": {
-      "eyebrow": "The idea",
-      "title": "I also code for the people I love",
-      "body": "It's not all infrastructure and microservices. Some of the things I've most enjoyed making are for the people I love. This is an interactive website I made for my partner's birthday: it opens as a little experience, with scenes you move through one by one, sound and confetti. Handwritten HTML, CSS and JavaScript, no frameworks — just the wish to surprise her."
-    },
-    "gallery": {
-      "eyebrow": "Screenshots",
-      "title": "How it looks",
-      "items": [
-        { "caption": "The cover of the experience" },
-        { "caption": "One of the interactive scenes" },
-        { "caption": "The ending, with confetti" }
-      ]
-    },
-    "highlights": {
-      "eyebrow": "Details",
-      "title": "What I put inside",
-      "items": [
-        { "title": "Interactive scenes", "note": "The site moves through scenes that the person discovers one by one, at their own pace." },
-        { "title": "Typography with character", "note": "Fraunces + Inter to give it a warm, careful feel, far from generic." },
-        { "title": "Sound and confetti", "note": "Small animation and audio touches that make the moment feel special." },
-        { "title": "Pure HTML", "note": "Handmade, no frameworks: light, fast and easy to host anywhere." }
-      ]
-    },
-    "honesty": {
-      "eyebrow": "Personal",
-      "title": "Code made with care",
-      "body": "It's a small, personal project, but one of the ones I'm most excited to show: it shows I like to care about design and detail, and that coding also lets me make the people I love happy."
-    },
-    "nav": {
-      "back": "← triagebox",
       "next": "All projects →"
     }
   }

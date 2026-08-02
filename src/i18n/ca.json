@@ -34,6 +34,8 @@
     "strength": "Si alguna cosa em defineix és l'adaptabilitat. Sobre una base d'enginyer de programari i científic de dades —i amb la IA d'aliada— em moc amb soltesa fora del meu terreny: canvio de llenguatge, continuo entenent el codi i l'estructura de projectes que no són meus i acabo desenvolupant-me en entorns aliens força de pressa. Aquesta capacitat d'adaptar-me és el meu punt més fort.",
     "cvNote": "Vols el detall formal, amb dates i empreses?",
     "cvCta": "Descarrega el CV",
+    "cvCtaSpain": "Descarrega el CV (Espanya)",
+    "cvCtaIntl": "Descarrega el CV (internacional)",
     "cvSoonCta": "CV en preparació",
     "cvSoonHint": "Encara no he penjat el PDF — torna aviat o escriu-me directament.",
     "doingEyebrow": "Què fa l'Èric?",
@@ -105,16 +107,6 @@
         "platforms": ["mic", "ticket", "claude"],
         "stack": ["FastAPI", "faster-whisper", "Skill de Claude", "Multi-tenant"],
         "badges": [{ "label": "públic", "variant": "accent" }]
-      },
-      {
-        "id": "cumple",
-        "family": "cumple",
-        "name": "Cumple",
-        "full": "Un regal fet amb codi",
-        "tagline": "Una web interactiva que vaig fer a la meva parella per al seu aniversari. També gaudeixo programant per a la gent que estimo.",
-        "href": "/ca/cumple",
-        "stack": ["HTML/CSS", "Interactiu", "Fet a mà"],
-        "badges": [{ "label": "personal", "variant": "accent" }, { "label": "en construcció", "variant": "standby" }]
       }
     ]
   },
@@ -402,66 +394,6 @@
     },
     "nav": {
       "back": "← Duna",
-      "next": "Següent: Cumple →"
-    }
-  },
-  "cumple": {
-    "meta": {
-      "title": "Cumple — Un regal fet amb codi · Èric Casanovas Pérez",
-      "description": "Una web interactiva feta a mà com a regal d'aniversari per a la meva parella: escenes, so i confeti. Codi amb estima."
-    },
-    "back": "Projectes",
-    "name": "Cumple",
-    "full": "Un regal fet amb codi",
-    "tagline": "Una web interactiva que vaig fer a la meva parella per al seu aniversari.",
-    "badges": [
-      { "label": "personal", "variant": "family" },
-      { "label": "en construcció", "variant": "standby" }
-    ],
-    "wip": {
-      "title": "Pàgina en construcció",
-      "body": "Encara em falten les captures reals d'aquesta web-regal. L'estructura i el text ja hi són, però les imatges d'aquí sota són de mostra per ara."
-    },
-    "concept": {
-      "stages": [
-        { "label": "Una idea amb estima", "icon": "idea" },
-        { "label": "Web feta a mà", "sub": "HTML, CSS i JS", "icon": "code" },
-        { "label": "Escenes, so i confeti", "icon": "sparkles" },
-        { "label": "Un regal per a ella", "icon": "heart" }
-      ]
-    },
-    "stats": [],
-    "story": {
-      "eyebrow": "La idea",
-      "title": "També programo per a la gent que estimo",
-      "body": "No tot és infraestructura i microserveis. Algunes de les coses que més m'ha agradat fer són per a la gent que estimo. Aquesta és una web interactiva que vaig fer a la meva parella per al seu aniversari: s'obre com una petita experiència, amb escenes que passes una a una, so i confeti. HTML, CSS i JavaScript a mà, sense frameworks — només ganes de sorprendre-la."
-    },
-    "gallery": {
-      "eyebrow": "Captures",
-      "title": "Com es veu",
-      "items": [
-        { "caption": "La portada de l'experiència" },
-        { "caption": "Una de les escenes interactives" },
-        { "caption": "El final, amb confeti" }
-      ]
-    },
-    "highlights": {
-      "eyebrow": "Detalls",
-      "title": "El que hi vaig posar dins",
-      "items": [
-        { "title": "Escenes interactives", "note": "La web avança per escenes que la persona va descobrint una a una, al seu ritme." },
-        { "title": "Tipografia amb caràcter", "note": "Fraunces + Inter per donar-li un aire càlid i cuidat, lluny del genèric." },
-        { "title": "So i confeti", "note": "Petits detalls d'animació i àudio que fan que el moment se senti especial." },
-        { "title": "HTML pur", "note": "Fet a mà, sense frameworks: lleuger, ràpid i fàcil d'allotjar a qualsevol lloc." }
-      ]
-    },
-    "honesty": {
-      "eyebrow": "Personal",
-      "title": "Codi amb estima",
-      "body": "És un projecte petit i personal, però dels que més il·lusió em fa ensenyar: demostra que m'agrada cuidar el disseny i el detall, i que programar també em serveix per fer feliç la gent que estimo."
-    },
-    "nav": {
-      "back": "← triagebox",
       "next": "Tots els projectes →"
     }
   }

@@ -23,7 +23,7 @@ interface Props {
   /** Línea de énfasis ("Mi proyecto más ambicioso…"). */
   emphasis: string;
   href: string;
-  family: 'acg' | 'duna' | 'inbox' | 'cumple';
+  family: 'acg' | 'duna' | 'inbox';
   flagLabel: string;
   stack: string[];
   stats: Stat[];
@@ -127,7 +127,6 @@ const {
   }
   .feat[data-family='duna'] { --fam: var(--duna); }
   .feat[data-family='inbox'] { --fam: var(--inbox); }
-  .feat[data-family='cumple'] { --fam: var(--cumple); }
   /* Color por paleta (dorado/azul) en vez del color de proyecto. */
   .feat[data-colorby='tone'][data-tone='primary'] { --fam: var(--accent); }
   .feat[data-colorby='tone'][data-tone='secondary'] { --fam: var(--accent-2); }
